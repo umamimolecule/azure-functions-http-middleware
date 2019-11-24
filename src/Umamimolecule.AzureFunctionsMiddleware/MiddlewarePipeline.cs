@@ -13,7 +13,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
     /// </summary>
     public class MiddlewarePipeline : IMiddlewarePipeline
     {
-        private readonly List<HttpMiddleware> pipeline = new List<HttpMiddleware>();
+        private readonly List<IHttpMiddleware> pipeline = new List<IHttpMiddleware>();
 
         /// <summary>
         /// Gets or sets the exception handler.  Allows you to control how exceptions are handled and
@@ -26,7 +26,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         /// <param name="middleware">The middleware to add.</param>
         /// <returns>The pipeline.</returns>
-        public IMiddlewarePipeline Use(HttpMiddleware middleware)
+        public IMiddlewarePipeline Use(IHttpMiddleware middleware)
         {
             if (pipeline.Any())
             {

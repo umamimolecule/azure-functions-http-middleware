@@ -21,7 +21,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         /// <param name="middleware">The middleware to add.</param>
         /// <returns>The pipeline.</returns>
-        IMiddlewarePipeline Use(HttpMiddleware middleware);
+        IMiddlewarePipeline Use(IHttpMiddleware middleware);
 
         /// <summary>
         /// Executes the pipeline.

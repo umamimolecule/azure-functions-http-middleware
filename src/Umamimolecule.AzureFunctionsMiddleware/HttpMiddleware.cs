@@ -5,7 +5,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
     /// <summary>
     /// Base class for all middleware.
     /// </summary>
-    public abstract class HttpMiddleware
+    public abstract class HttpMiddleware : IHttpMiddleware
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpMiddleware"/> class.
@@ -18,7 +18,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// Initializes a new instance of the <see cref="HttpMiddleware"/> class.
         /// </summary>
         /// <param name="next">The next middleware to be run.</param>
-        protected HttpMiddleware(HttpMiddleware next)
+        protected HttpMiddleware(IHttpMiddleware next)
         {
             this.Next = next;
         }
@@ -26,7 +26,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <summary>
         /// Gets or sets the next middleware to be executed after this one.
         /// </summary>
-        public HttpMiddleware Next { get; set; }
+        public IHttpMiddleware Next { get; set; }
 
         /// <summary>
         /// Runs the middleware.
