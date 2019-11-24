@@ -1,0 +1,21 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata minClientVersion="2.5">
+    <id>Umamimolecule.AzureFunctionsMiddleware</id>
+    <version>1.0.0</version>
+    <title>Umamimolecule.AzureFunctionsMiddleware</title>
+    <authors>Umamimolecule</authors>
+    <owners>Umamimolecule</owners>
+    <projectUrl>https://github.com/umamimolecule/azure-functions-http-middleware</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.</description>
+    <tags>Azure Functions Http Middleware</tags>
+    <dependencies>
+      <dependency id="microsoft.aspnetcore.http" version="2.2.2" />
+      <dependency id="microsoft.aspnetcore.mvc.abstractions" version="2.2.0" />
+      <dependency id="microsoft.aspnetcore.mvc.core" version="2.2.5" />
+      <dependency id="microsoft.extensions.logging" version="2.1.0" />
+      <dependency id="microsoft.extensions.logging.abstractions" version="2.2.0" />
+    </dependencies>
+  </metadata>
+</package>

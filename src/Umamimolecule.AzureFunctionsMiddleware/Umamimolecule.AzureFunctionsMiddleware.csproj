@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Umamimolecule</Authors>
+    <Company />
+    <Description>An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.</Description>
+    <PackageProjectUrl>https://github.com/umamimolecule/azure-functions-http-middleware</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/umamimolecule/azure-functions-http-middleware</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Azure Functions Http Middleware</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
