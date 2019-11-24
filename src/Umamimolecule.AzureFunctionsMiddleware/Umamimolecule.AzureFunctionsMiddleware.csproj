@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="microsoft.aspnetcore.http" Version="2.2.2" />
+    <PackageReference Include="microsoft.aspnetcore.mvc.abstractions" Version="2.2.0" />
+    <PackageReference Include="microsoft.aspnetcore.mvc.core" Version="2.2.5" />
+    <PackageReference Include="microsoft.extensions.logging" Version="2.1.0" />
+    <PackageReference Include="microsoft.extensions.logging.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>
