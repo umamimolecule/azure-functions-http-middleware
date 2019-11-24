@@ -1,4 +1,4 @@
-[![Build Status](https://umamimolecule.visualstudio.com/UmamiTools/_apis/build/status/Umamimolecule.AzureFunctionsMiddleware%20CI?branchName=master)](https://umamimolecule.visualstudio.com/UmamiTools/_build/latest?definitionId=13&branchName=master)
+[![Build Status](https://umamimolecule.visualstudio.com/UmamiTools/_apis/build/status/Umamimolecule.AzureFunctionsMiddleware%20CI?branchName=master)](https://umamimolecule.visualstudio.com/UmamiTools/_build/latest?definitionId=13&branchName=master) ![Azure DevOps coverage (master)](https://img.shields.io/azure-devops/coverage/umamimolecule/UmamiTools/13/master)
 
 # azure-functions-http-middleware
 
