@@ -1,3 +1,5 @@
+[![Build Status](https://umamimolecule.visualstudio.com/UmamiTools/_apis/build/status/Umamimolecule.AzureFunctionsMiddleware%20CI?branchName=master)](https://umamimolecule.visualstudio.com/UmamiTools/_build/latest?definitionId=13&branchName=master)
+
 # azure-functions-http-middleware
 
 An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.
