@@ -2,19 +2,37 @@
 
 namespace Umamimolecule.AzureFunctionsMiddleware
 {
+    /// <summary>
+    /// Base class for all middleware.
+    /// </summary>
     public abstract class HttpMiddleware
     {
-        public HttpMiddleware Next;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpMiddleware"/> class.
+        /// </summary>
+        protected HttpMiddleware()
+        {
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpMiddleware"/> class.
+        /// </summary>
+        /// <param name="next">The next middleware to be run.</param>
         protected HttpMiddleware(HttpMiddleware next)
         {
             this.Next = next;
         }
 
-        protected HttpMiddleware()
-        {
-        }
+        /// <summary>
+        /// Gets or sets the next middleware to be executed after this one.
+        /// </summary>
+        public HttpMiddleware Next { get; set; }
 
+        /// <summary>
+        /// Runs the middleware.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public abstract Task InvokeAsync(IHttpFunctionContext context);
     }
 }

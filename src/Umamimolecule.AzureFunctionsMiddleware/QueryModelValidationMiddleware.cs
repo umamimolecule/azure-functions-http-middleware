@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
 {
+    /// <summary>
+    /// Middleware to perform validation of the query parameters.
+    /// </summary>
+    /// <typeparam name="T">The query parameter type.</typeparam>
     public class QueryModelValidationMiddleware<T> : HttpMiddleware
     {
         public override async Task InvokeAsync(IHttpFunctionContext context)

@@ -7,6 +7,10 @@ using Newtonsoft.Json;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
 {
+    /// <summary>
+    /// Middleware to perform validation body payload.
+    /// </summary>
+    /// <typeparam name="T">The body payload type.</typeparam>
     public class BodyModelValidationMiddleware<T> : HttpMiddleware
         where T: new()
     {
@@ -31,7 +35,8 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             var model = await this.CreateModel(context);
             List<ValidationResult> validationResults = new List<ValidationResult>();
 
-            // TODO: Use recursive validator here since Validator only looks at top-level properties!
+            // TODO: Need to implement and use a recursive validator here, since Validator
+            //       only looks at top-level properties!
 
             if (!Validator.TryValidateObject(model, new ValidationContext(model), validationResults, true))
             {

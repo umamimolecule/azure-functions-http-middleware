@@ -9,7 +9,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
     {
         public static IMiddlewarePipeline Use(this IMiddlewarePipeline pipeline, Func<IHttpFunctionContext, Task<IActionResult>> func)
         {
-            return pipeline.Use(new AbstractFunctionMiddleware(func));
+            return pipeline.Use(new TaskMiddleware(func));
         }
 
         public static IMiddlewarePipeline UseCorrelationId(this IMiddlewarePipeline pipeline, IEnumerable<string> correlationIdHeaders)

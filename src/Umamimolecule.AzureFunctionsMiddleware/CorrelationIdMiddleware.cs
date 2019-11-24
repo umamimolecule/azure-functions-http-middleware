@@ -6,10 +6,17 @@ using Microsoft.Extensions.Primitives;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
 {
+    /// <summary>
+    /// Middleware to extract correlation identifier from a request header.
+    /// </summary>
     public class CorrelationIdMiddleware : HttpMiddleware
     {
         private readonly IEnumerable<string> correlationIdHeaders;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskMiddleware"/> class.
+        /// </summary>
+        /// <param name="correlationIdHeaders">The collection of headers which will be inspected, in order.  The first matching header found will be used for the correlation ID.</param>
         public CorrelationIdMiddleware(IEnumerable<string> correlationIdHeaders)
         {
             this.correlationIdHeaders = correlationIdHeaders;
@@ -29,7 +36,8 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         {
             foreach (var correlationIdHeader in this.correlationIdHeaders)
             {
-                if (request.Headers.TryGetValue(correlationIdHeader, out StringValues value) && !StringValues.IsNullOrEmpty(value))
+                if (request.Headers.TryGetValue(correlationIdHeader, out StringValues value) &&
+                    !StringValues.IsNullOrEmpty(value))
                 {
                     return value.ToString();
                 }
