@@ -35,10 +35,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             var model = await this.CreateModel(context);
             List<ValidationResult> validationResults = new List<ValidationResult>();
 
-            // TODO: Need to implement and use a recursive validator here, since Validator
-            //       only looks at top-level properties!
-
-            if (!Validator.TryValidateObject(model, new ValidationContext(model), validationResults, true))
+            if (!RecursiveValidator.TryValidateObject(model, validationResults, true))
             {
                 return (false, string.Join(", ", validationResults.Select(x => x.ErrorMessage)), model);
             }
