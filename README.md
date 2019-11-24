@@ -9,7 +9,7 @@ public class MyFunction
 {
     private readonly IMiddlewarePipeline pipeline;
 
-    public MyPostFunction()
+    public MyFunction()
     {
         // This pipeline will:
         // 1. Extract correlation ID from request header,
