@@ -28,6 +28,8 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                 return (false, string.Join(", ", validationResults.Select(x => x.ErrorMessage)), model);
             }
 
+            context.Items[ContextItems.Body] = model;
+
             return (true, null, model);
         }
 

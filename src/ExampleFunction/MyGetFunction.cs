@@ -33,7 +33,8 @@ namespace FunctionAppMiddlewarePOC
             dynamic payload = new
             {
                 correlationId = context.TraceIdentifier,
-                message = "OK"
+                message = "OK",
+                query = context.Items[ContextItems.Query]
             };
 
             return new OkObjectResult(payload);

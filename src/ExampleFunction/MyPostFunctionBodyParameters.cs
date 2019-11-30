@@ -6,5 +6,7 @@ namespace FunctionAppMiddlewarePOC
     {
         [Required]
         public string Name { get; set; }
+
+        public string Other { get; set; }
     }
 }
