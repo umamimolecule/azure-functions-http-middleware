@@ -54,8 +54,8 @@ namespace MyFunctionApp
             dynamic payload = new
             {
                 correlationId = context.TraceIdentifier,
-                body = context[ContextItems.Body],
-                query = context[ContextItems.Query]
+                body = context.Items[ContextItems.Body],
+                query = context.Items[ContextItems.Query]
             };
 
             return new OkObjectResult(payload);
