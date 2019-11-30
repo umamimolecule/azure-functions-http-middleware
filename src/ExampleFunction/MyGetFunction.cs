@@ -20,12 +20,10 @@ namespace FunctionAppMiddlewarePOC
         }
 
         [FunctionName(nameof(MyGetFunction))]
-        public async Task<HttpResponseMessage> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
-            await Task.CompletedTask;
-            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
-            //return await this.pipeline.RunAsync();
+            return await this.pipeline.RunAsync();
         }
 
         private async Task<IActionResult> ExecuteAsync(HttpContext context)
@@ -34,7 +32,8 @@ namespace FunctionAppMiddlewarePOC
 
             dynamic payload = new
             {
-                correlationId = context.TraceIdentifier
+                correlationId = context.TraceIdentifier,
+                message = "OK"
             };
 
             return new OkObjectResult(payload);

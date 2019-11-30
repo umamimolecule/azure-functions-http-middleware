@@ -1,26 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
 {
     public class HttpResponseResult : IActionResult
     {
-        private readonly HttpResponse response;
+        private readonly HttpContext context;
 
-        public HttpResponseResult(HttpResponse response)
+        public HttpResponseResult(HttpContext context)
         {
-            this.response = response;
+            this.context = context;
         }
 
-        public HttpResponse Response => this.response;
+        public HttpContext Context => this.context;
 
-        public Task ExecuteResultAsync(ActionContext context)
+        public async Task ExecuteResultAsync(ActionContext context)
         {
-            throw new NotImplementedException();
+            await Task.CompletedTask;
+            context.HttpContext = this.context;
         }
     }
 }

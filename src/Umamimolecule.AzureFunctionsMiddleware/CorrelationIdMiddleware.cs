@@ -24,7 +24,8 @@ namespace Umamimolecule.AzureFunctionsMiddleware
 
         public override async Task InvokeAsync(HttpContext context)
         {
-            context.TraceIdentifier = this.GetCorrelationId(context.Request);
+            var correlationId = this.GetCorrelationId(context.Request, out string matchingHeader);
+            context.TraceIdentifier = correlationId;
 
             if (this.Next != null)
             {
@@ -32,13 +33,15 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             }
         }
 
-        private string GetCorrelationId(HttpRequest request)
+        private string GetCorrelationId(HttpRequest request, out string matchingHeader)
         {
+            matchingHeader = null;
             foreach (var correlationIdHeader in this.correlationIdHeaders)
             {
                 if (request.Headers.TryGetValue(correlationIdHeader, out StringValues value) &&
                     !StringValues.IsNullOrEmpty(value))
                 {
+                    matchingHeader = correlationIdHeader;
                     return value.ToString();
                 }
             }

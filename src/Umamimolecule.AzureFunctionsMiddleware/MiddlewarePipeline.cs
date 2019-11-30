@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +20,6 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         {
             this.httpContextAccessor = httpContextAccessor;
         }
-
-        /// <summary>
-        /// Gets or sets the exception handler.  Allows you to control how exceptions are handled and
-        /// what status code and payload is returned in the response.
-        /// </summary>
-        public Func<Exception, HttpContext, Task<IActionResult>> ExceptionHandler { get; set; }
 
         /// <summary>
         /// Adds middleware to the pipeline.
@@ -56,7 +51,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                 await pipeline.First().InvokeAsync(context);
             }
 
-            return new HttpResponseResult(context.Response);
+            return new HttpResponseResult(context);
         }
     }
 }

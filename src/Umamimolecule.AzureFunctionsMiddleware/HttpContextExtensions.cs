@@ -9,8 +9,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
     {
         public static async Task ProcessActionResultAsync(this HttpContext context, IActionResult result)
         {
-            await Task.CompletedTask;
-            throw new NotImplementedException();
+            await result.ExecuteResultAsync(new ActionContext(context, new Microsoft.AspNetCore.Routing.RouteData(), new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor()));
         }
     }
 }

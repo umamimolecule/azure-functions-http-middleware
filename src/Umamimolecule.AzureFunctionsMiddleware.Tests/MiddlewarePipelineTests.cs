@@ -3,6 +3,10 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 using Moq;
 using Shouldly;
 using Xunit;
@@ -13,10 +17,26 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
     {
         private readonly HttpContext context;
         private readonly HttpContextAccessor contextAccessor;
+        private readonly Mock<ILoggerFactory> loggerFactory = new Mock<ILoggerFactory>();
+        private readonly Logger logger = new Logger();
 
         public MiddlewarePipelineTests()
         {
-            this.context = new ContextBuilder().Build();
+            this.loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>()))
+                  .Returns(this.logger);
+
+            ServiceCollection c = new ServiceCollection();
+            c.AddMvcCore().AddJsonFormatters();
+            c.AddOptions();
+
+            c.AddTransient<ILoggerFactory>((IServiceProvider p) => this.loggerFactory.Object);
+            c.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
+            var serviceProvider = c.BuildServiceProvider();
+            //var serviceProvider = new DefaultServiceProvider();
+
+            this.context = new ContextBuilder().AddServiceProvider(serviceProvider)
+                                               .Accepts("application/json")
+                                               .Build();
             this.contextAccessor = new HttpContextAccessor(this.context);
         }
 
@@ -74,38 +94,29 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             objectResult.StatusCode.ShouldBe((int)HttpStatusCode.BadRequest);
         }
 
-        [Fact(DisplayName = "RunAsync should return expected response when no middleware is configured")]
-        public async Task RunAsync_NoMiddleware_CustomExceptionHandler()
-        {
-            BadRequestObjectResult handlerResult = new BadRequestObjectResult("oh no");
-            Func<Exception, HttpContext, Task<IActionResult>> exceptionHandler = (Exception ex, HttpContext context) =>
-            {
-                return Task.FromResult<IActionResult>(handlerResult);
-            };
-
-            var instance = this.CreateInstance();
-            instance.ExceptionHandler = exceptionHandler;
-            var result = await instance.RunAsync();
-            result.ShouldBe(handlerResult);
-        }
-
-
         [Fact(DisplayName = "RunAsync should return expected response")]
         public async Task RunAsync()
         {
             OkObjectResult middlewareResponse = new OkObjectResult("hello");
 
             var instance = this.CreateInstance();
-            var middleware = new FunctionMiddleware(async (HttpContext context) =>
+            var middleware = new FunctionMiddleware((HttpContext context) =>
             {
-                return new OkResult();
+                dynamic obj = new
+                {
+                    message = "hello"
+                };
+
+                return Task.FromResult<IActionResult>(new OkObjectResult(obj));
             });
 
             instance.Use(middleware);
             var result = await instance.RunAsync();
             var httpResponseResult = result.ShouldBeOfType<HttpResponseResult>();
-            httpResponseResult.Response.StatusCode.ShouldBe((int)HttpStatusCode.OK);
-            httpResponseResult.Response.Body.Length.ShouldBeGreaterThan(0);
+            await httpResponseResult.ExecuteResultAsync(new ActionContext() { HttpContext = this.context });
+            this.context.Response.StatusCode.ShouldBe((int)HttpStatusCode.OK);
+            //var content = this.context.Response.result.Content.ReadAsStringAsync();
+            //content.ShouldBe("hello");
         }
 
         private MiddlewarePipeline CreateInstance()

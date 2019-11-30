@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Umamimolecule.AzureFunctionsMiddleware;
+using System.Net.Http;
 
 namespace FunctionAppMiddlewarePOC
 {
@@ -29,7 +30,8 @@ namespace FunctionAppMiddlewarePOC
 
             dynamic payload = new
             {
-                correlationId = context.TraceIdentifier
+                correlationId = context.TraceIdentifier,
+                message = "OK"
             };
 
             return new OkObjectResult(payload);
