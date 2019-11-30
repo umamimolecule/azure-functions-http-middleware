@@ -13,6 +13,11 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             return pipeline.Use(new FunctionMiddleware(func));
         }
 
+        public static IMiddlewarePipeline Use(this IMiddlewarePipeline pipeline, RequestDelegate requestDelegate)
+        {
+            return pipeline.Use(new RequestDelegateMiddleware(requestDelegate));
+        }
+
         public static IMiddlewarePipeline UseCorrelationId(this IMiddlewarePipeline pipeline, IEnumerable<string> correlationIdHeaders)
         {
             return pipeline.Use(new CorrelationIdMiddleware(correlationIdHeaders));
