@@ -9,9 +9,9 @@ namespace Umamimolecule.AzureFunctionsMiddleware
     public class BadRequestException : Exception
     {
         /// <summary>
-        /// Initializ
+        /// Initializes a new instance of the <see cref="BadRequestException"/> class.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">The message describing the error.</param>
         public BadRequestException(string message)
             : base(message)
         {

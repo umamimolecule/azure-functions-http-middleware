@@ -19,7 +19,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <summary>
         /// Initializes a new instance of the <see cref="MiddlewarePipelineException"/> class.
         /// </summary>
-        /// <param name="message">The error message.</param>
+        /// <param name="message">The message describing the error.</param>
         public MiddlewarePipelineException(string message)
             : base(message)
         {
