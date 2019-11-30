@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
 {
     public static class MiddlewarePipelineExtensions
     {
-        public static IMiddlewarePipeline Use(this IMiddlewarePipeline pipeline, Func<IHttpFunctionContext, Task<IActionResult>> func)
+        public static IMiddlewarePipeline Use(this IMiddlewarePipeline pipeline, Func<HttpContext, Task<IActionResult>> func)
         {
-            return pipeline.Use(new TaskMiddleware(func));
+            return pipeline.Use(new FunctionMiddleware(func));
+        }
+
+        public static IMiddlewarePipeline Use(this IMiddlewarePipeline pipeline, RequestDelegate requestDelegate)
+        {
+            return pipeline.Use(new RequestDelegateMiddleware(requestDelegate));
         }
 
         public static IMiddlewarePipeline UseCorrelationId(this IMiddlewarePipeline pipeline, IEnumerable<string> correlationIdHeaders)

@@ -1,10 +1,9 @@
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Umamimolecule.AzureFunctionsMiddleware.Tests
@@ -15,15 +14,23 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
 
         private const string correlationIdHeader2 = "b";
 
+        public CorrelationIdMiddlewareTests()
+        {
+            var types = typeof(StatusCodeResult).Assembly.GetExportedTypes();
+            var actionResults = types.Where(x => x.GetInterfaces().Contains(typeof(IActionResult))).ToArray();
+        }
+
         [Fact(DisplayName = "Should invoke next middleware")]
         public async Task InvokeNextMiddleware()
         {
-            Dictionary<string, StringValues> headers = new Dictionary<string, StringValues>()
+            HeaderDictionary headers = new HeaderDictionary
             {
                 { "c", "abc123" }
             };
 
-            var context = this.CreateContext(headers);
+            var context = new ContextBuilder().AddRequestHeaders(headers)
+                                              .Build();
+
             var instance = this.CreateInstance();
 
             var nextMiddleWare = new Mock<HttpMiddleware>();
@@ -36,62 +43,56 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
         [Fact(DisplayName = "Should generate correlation identifier when no matching headers are found")]
         public async Task NoMatchingCorrelationHeaders()
         {
-            Dictionary<string, StringValues> headers = new Dictionary<string, StringValues>()
+            HeaderDictionary headers = new HeaderDictionary
             {
                 { "c", "abc123" }
             };
 
-            var context = this.CreateContext(headers);
+            var context = new ContextBuilder().AddRequestHeaders(headers)
+                                              .Build();
+
             var instance = this.CreateInstance();
             await instance.InvokeAsync(context);
-            context.CorrelationId.ShouldNotBeNullOrWhiteSpace();
+            context.TraceIdentifier.ShouldNotBeNullOrWhiteSpace();
         }
 
         [Fact(DisplayName = "Should use supplied correlation identifier")]
         public async Task FirstMatchingCorrelationHeader()
         {
-            Dictionary<string, StringValues> headers = new Dictionary<string, StringValues>()
+            HeaderDictionary headers = new HeaderDictionary
             {
                 { correlationIdHeader1, "abc123" },
                 { correlationIdHeader2, "abc124" }
             };
 
-            var context = this.CreateContext(headers);
+            var context = new ContextBuilder().AddRequestHeaders(headers)
+                                              .Build();
+
             var instance = this.CreateInstance();
             await instance.InvokeAsync(context);
-            context.CorrelationId.ShouldBe("abc123");
+            context.TraceIdentifier.ShouldBe("abc123");
         }
 
         [Fact(DisplayName = "Should use supplied correlation identifier")]
         public async Task SecondMatchingCorrelationHeaders()
         {
-            Dictionary<string, StringValues> headers = new Dictionary<string, StringValues>()
+            HeaderDictionary headers = new HeaderDictionary
             {
                 { correlationIdHeader1, "" },
                 { correlationIdHeader2, "abc124" }
             };
 
-            var context = this.CreateContext(headers);
+            var context = new ContextBuilder().AddRequestHeaders(headers)
+                                              .Build();
+            
             var instance = this.CreateInstance();
             await instance.InvokeAsync(context);
-            context.CorrelationId.ShouldBe("abc124");
+            context.TraceIdentifier.ShouldBe("abc124");
         }
 
         private CorrelationIdMiddleware CreateInstance()
         {
             return new CorrelationIdMiddleware(new string[] { correlationIdHeader1, correlationIdHeader2 });
-        }
-
-        private IHttpFunctionContext CreateContext(Dictionary<string, StringValues> headers)
-        {
-            var request = new Mock<HttpRequest>();
-            request.Setup(x => x.Headers)
-                   .Returns(new HeaderDictionary(headers));
-
-            return new HttpFunctionContext()
-            {
-                Request = request.Object
-            };
         }
     }
 }

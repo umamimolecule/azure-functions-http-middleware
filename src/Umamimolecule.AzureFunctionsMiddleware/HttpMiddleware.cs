@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
 {
@@ -33,6 +34,6 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public abstract Task InvokeAsync(IHttpFunctionContext context);
+        public abstract Task InvokeAsync(HttpContext context);
     }
 }

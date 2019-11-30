@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
 {
@@ -10,37 +11,26 @@ namespace Umamimolecule.AzureFunctionsMiddleware
     /// Middleware to perform validation of the query parameters.
     /// </summary>
     /// <typeparam name="T">The query parameter type.</typeparam>
-    public class QueryModelValidationMiddleware<T> : HttpMiddleware
+    public class QueryModelValidationMiddleware<T> : ValidationMiddleware<T>
+        where T : new()
     {
-        public override async Task InvokeAsync(IHttpFunctionContext context)
+        public override string ErrorCode => ErrorCodes.InvalidQueryParameters;
+
+        protected override async Task<(bool Success, string Error, T Model)> ValidateAsync(HttpContext context)
         {
-            var validationResult = this.Validate(context);
-            if (!validationResult.Success)
-            {
-                throw new BadRequestException(validationResult.Error);
-            }
-
-            context.QueryModel = validationResult.Model;
-
-            if (this.Next != null)
-            {
-                await this.Next.InvokeAsync(context);
-            }
-        }
-
-        private (bool Success, string Error, T Model) Validate(IHttpFunctionContext context)
-        {
-            var model = this.CreateModel(context);
+            var model = await this.CreateModelAsync(context);
             List<ValidationResult> validationResults = new List<ValidationResult>();
             if (!Validator.TryValidateObject(model, new ValidationContext(model), validationResults, true))
             {
                 return (false, string.Join(", ", validationResults.Select(x => x.ErrorMessage)), model);
             }
 
+            context.Items[ContextItems.Query] = model;
+
             return (true, null, model);
         }
 
-        private T CreateModel(IHttpFunctionContext context)
+        private Task<T> CreateModelAsync(HttpContext context)
         {
             var type = typeof(T);
             var ctor = type.GetConstructor(System.Type.EmptyTypes);
@@ -64,7 +54,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                 }
             }
 
-            return model;
+            return Task.FromResult(model);
         }
     }
 }
