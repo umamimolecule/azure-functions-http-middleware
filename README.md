@@ -14,9 +14,9 @@ public class MyFunction
     public MyFunction()
     {
         // This pipeline will:
-        // 1. Extract correlation ID from request header,
-        // 2. Validate that required query parameters are present
-        // 3. Validate the body payload contains all mandatory fields
+        // 1. Extract correlation ID from request header 'request-id' and put into HttpContext.TraceIdentifier,
+        // 2. Validate that required query parameters are present and put into HttpContext.Items["Query"]
+        // 3. Validate the body payload contains all mandatory fields and put into HttpContext.Items["Body"]
         // 4. Executes the logic for this Azure Function
         //
         // Any validation errors will result in a 400 Bad Request returned.
@@ -44,9 +44,9 @@ public class MyFunction
 
         dynamic payload = new
         {
-            correlationId = context.CorrelationId,
-            body = context.BodyModel,
-            query = context.QueryModel
+            correlationId = context.TraceIdentifier,
+            body = context[ContextItems.Body],
+            query = context[ContextItems.Query]
         };
 
         return new OkObjectResult(payload);
@@ -75,7 +75,6 @@ After having written several HTTP-triggered Azure Functions and writing the same
 This project was inspired by [this blog post](https://dasith.me/2018/01/20/using-azure-functions-httptrigger-as-web-api/) by Dasith Wijesiriwardena.
 
 ## Dependencies
-
-Azure Functions 1.0.29
-.Net Standard 2.0
+- Azure Functions 1.0.29
+- .Net Standard 2.0
 
