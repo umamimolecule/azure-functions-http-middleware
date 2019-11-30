@@ -14,7 +14,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         private readonly IEnumerable<string> correlationIdHeaders;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TaskMiddleware"/> class.
+        /// Initializes a new instance of the <see cref="FunctionMiddleware"/> class.
         /// </summary>
         /// <param name="correlationIdHeaders">The collection of headers which will be inspected, in order.  The first matching header found will be used for the correlation ID.</param>
         public CorrelationIdMiddleware(IEnumerable<string> correlationIdHeaders)
@@ -22,9 +22,9 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             this.correlationIdHeaders = correlationIdHeaders;
         }
 
-        public override async Task InvokeAsync(IHttpFunctionContext context)
+        public override async Task InvokeAsync(HttpContext context)
         {
-            context.CorrelationId = this.GetCorrelationId(context.Request);
+            context.TraceIdentifier = this.GetCorrelationId(context.Request);
 
             if (this.Next != null)
             {

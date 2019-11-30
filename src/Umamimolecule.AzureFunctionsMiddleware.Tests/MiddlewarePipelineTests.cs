@@ -1,18 +1,25 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Umamimolecule.AzureFunctionsMiddleware.Tests
 {
     public class MiddlewarePipelineTests
     {
+        private readonly HttpContext context;
+        private readonly HttpContextAccessor contextAccessor;
+
+        public MiddlewarePipelineTests()
+        {
+            this.context = new ContextBuilder().Build();
+            this.contextAccessor = new HttpContextAccessor(this.context);
+        }
+
         [Fact(DisplayName = "Use should add the first middleware successfully")]
         public void Use_FirstMiddleWare()
         {
@@ -38,8 +45,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
         public async Task RunAsync_NoMiddleware_NoCustomExceptionHandler()
         {
             var instance = this.CreateInstance();
-            var request = new Mock<HttpRequest>();
-            var result = await instance.RunAsync(request.Object);
+            var result = await instance.RunAsync();
             var objectResult = result.ShouldBeOfType<ObjectResult>();
             objectResult.StatusCode.ShouldBe((int)HttpStatusCode.InternalServerError);
         }
@@ -50,8 +56,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             var instance = this.CreateInstance();
             var middleware = new Mock<IHttpMiddleware>();
             instance.Use(middleware.Object);
-            var request = new Mock<HttpRequest>();
-            var result = await instance.RunAsync(request.Object);
+            var result = await instance.RunAsync();
             var objectResult = result.ShouldBeOfType<ObjectResult>();
             objectResult.StatusCode.ShouldBe((int)HttpStatusCode.InternalServerError);
         }
@@ -61,11 +66,10 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
         {
             var instance = this.CreateInstance();
             var middleware = new Mock<IHttpMiddleware>();
-            middleware.Setup(x => x.InvokeAsync(It.IsAny<IHttpFunctionContext>()))
+            middleware.Setup(x => x.InvokeAsync(It.IsAny<HttpContext>()))
                       .ThrowsAsync(new BadRequestException("oh no"));
             instance.Use(middleware.Object);
-            var request = new Mock<HttpRequest>();
-            var result = await instance.RunAsync(request.Object);
+            var result = await instance.RunAsync();
             var objectResult = result.ShouldBeOfType<BadRequestObjectResult>();
             objectResult.StatusCode.ShouldBe((int)HttpStatusCode.BadRequest);
         }
@@ -74,15 +78,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
         public async Task RunAsync_NoMiddleware_CustomExceptionHandler()
         {
             BadRequestObjectResult handlerResult = new BadRequestObjectResult("oh no");
-            Func<Exception, IHttpFunctionContext, Task<IActionResult>> exceptionHandler = (Exception ex, IHttpFunctionContext context) =>
+            Func<Exception, HttpContext, Task<IActionResult>> exceptionHandler = (Exception ex, HttpContext context) =>
             {
                 return Task.FromResult<IActionResult>(handlerResult);
             };
 
             var instance = this.CreateInstance();
             instance.ExceptionHandler = exceptionHandler;
-            var request = new Mock<HttpRequest>();
-            var result = await instance.RunAsync(request.Object);
+            var result = await instance.RunAsync();
             result.ShouldBe(handlerResult);
         }
 
@@ -93,32 +96,21 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             OkObjectResult middlewareResponse = new OkObjectResult("hello");
 
             var instance = this.CreateInstance();
-            var middleware = new DummyMiddleware()
+            var middleware = new FunctionMiddleware(async (HttpContext context) =>
             {
-                Response = middlewareResponse
-            };
+                return new OkResult();
+            });
+
             instance.Use(middleware);
-            var request = new Mock<HttpRequest>();
-            var result = await instance.RunAsync(request.Object);
-            result.ShouldBe(middlewareResponse);
+            var result = await instance.RunAsync();
+            var httpResponseResult = result.ShouldBeOfType<HttpResponseResult>();
+            httpResponseResult.Response.StatusCode.ShouldBe((int)HttpStatusCode.OK);
+            httpResponseResult.Response.Body.Length.ShouldBeGreaterThan(0);
         }
 
         private MiddlewarePipeline CreateInstance()
         {
-            return new MiddlewarePipeline();
-        }
-    }
-
-    class DummyMiddleware : IHttpMiddleware
-    {
-        public IHttpMiddleware Next { get; set; }
-
-        public IActionResult Response { get; set; }
-
-        public Task InvokeAsync(IHttpFunctionContext context)
-        {
-            context.Response = this.Response;
-            return Task.CompletedTask;
+            return new MiddlewarePipeline(this.contextAccessor);
         }
     }
 }

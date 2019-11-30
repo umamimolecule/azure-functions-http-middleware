@@ -2,7 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
@@ -11,28 +13,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware
     /// Middleware to perform validation body payload.
     /// </summary>
     /// <typeparam name="T">The body payload type.</typeparam>
-    public class BodyModelValidationMiddleware<T> : HttpMiddleware
+    public class BodyModelValidationMiddleware<T> : ValidationMiddleware<T>
         where T: new()
     {
-        public override async Task InvokeAsync(IHttpFunctionContext context)
+        public override string ErrorCode => ErrorCodes.InvalidBody;
+
+        protected override async Task<(bool Success, string Error, T Model)> ValidateAsync(HttpContext context)
         {
-            var validationResult = await this.Validate(context);
-            if (!validationResult.Success)
-            {
-                throw new BadRequestException(validationResult.Error);
-            }
-
-            context.BodyModel = validationResult.Model;
-
-            if (this.Next != null)
-            {
-                await this.Next.InvokeAsync(context);
-            }
-        }
-
-        private async Task<(bool Success, string Error, T Model)> Validate(IHttpFunctionContext context)
-        {
-            var model = await this.CreateModel(context);
+            var model = await this.CreateModelAsync(context);
             List<ValidationResult> validationResults = new List<ValidationResult>();
 
             if (!RecursiveValidator.TryValidateObject(model, validationResults, true))
@@ -43,7 +31,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             return (true, null, model);
         }
 
-        private async Task<T> CreateModel(IHttpFunctionContext context)
+        private async Task<T> CreateModelAsync(HttpContext context)
         {
             if (context.Request.Body != null)
             {

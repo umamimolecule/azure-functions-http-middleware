@@ -20,17 +20,16 @@ namespace FunctionAppMiddlewarePOC
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
         {
-            return await this.pipeline.RunAsync(req);
+            return await this.pipeline.RunAsync();
         }
 
-        private async Task<IActionResult> ExecuteAsync(IHttpFunctionContext context)
+        private async Task<IActionResult> ExecuteAsync(HttpContext context)
         {
             await Task.CompletedTask;
 
             dynamic payload = new
             {
-                correlationId = context.CorrelationId,
-                body = context.BodyModel
+                correlationId = context.TraceIdentifier
             };
 
             return new OkObjectResult(payload);

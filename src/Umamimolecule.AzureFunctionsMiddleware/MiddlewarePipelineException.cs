@@ -15,5 +15,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             : base("Middleware pipeline must be configured with at least one middleware and the final middleware must return a response")
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MiddlewarePipelineException"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        public MiddlewarePipelineException(string message)
+            : base(message)
+        {
+        }
     }
 }

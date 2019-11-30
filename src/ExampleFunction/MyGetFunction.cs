@@ -5,6 +5,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Umamimolecule.AzureFunctionsMiddleware;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http.Internal;
 
 namespace FunctionAppMiddlewarePOC
 {
@@ -18,20 +20,21 @@ namespace FunctionAppMiddlewarePOC
         }
 
         [FunctionName(nameof(MyGetFunction))]
-        public async Task<IActionResult> Run(
+        public async Task<HttpResponseMessage> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
-            return await this.pipeline.RunAsync(req);
+            await Task.CompletedTask;
+            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
+            //return await this.pipeline.RunAsync();
         }
 
-        private async Task<IActionResult> ExecuteAsync(IHttpFunctionContext context)
+        private async Task<IActionResult> ExecuteAsync(HttpContext context)
         {
             await Task.CompletedTask;
 
             dynamic payload = new
             {
-                correlationId = context.CorrelationId,
-                query = context.QueryModel
+                correlationId = context.TraceIdentifier
             };
 
             return new OkObjectResult(payload);

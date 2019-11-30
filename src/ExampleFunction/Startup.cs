@@ -9,6 +9,7 @@ namespace FunctionAppMiddlewarePOC
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddTransient<IMiddlewarePipelineFactory, MiddlewarePipelineFactory>();
         }
     }
