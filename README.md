@@ -1,10 +1,10 @@
-[![Build Status](https://umamimolecule.visualstudio.com/UmamiTools/_apis/build/status/Umamimolecule.AzureFunctionsMiddleware%20CI?branchName=master)](https://umamimolecule.visualstudio.com/UmamiTools/_build/latest?definitionId=13&branchName=master) ![Azure DevOps coverage (master)](https://img.shields.io/azure-devops/coverage/umamimolecule/UmamiTools/13/master)
+[![Build Status](https://umamimolecule.visualstudio.com/UmamiTools/_apis/build/status/Umamimolecule.AzureFunctionsMiddleware%20CI?branchName=master)](https://umamimolecule.visualstudio.com/UmamiTools/_build/latest?definitionId=13&branchName=master)
 
 # azure-functions-http-middleware
 
 An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.
 
-Lets you do stuff like this in your function:
+It lets you do stuff like this in your function:
 
 ```
 using System.Threading.Tasks;
@@ -88,3 +88,82 @@ This project was inspired by [this blog post](https://dasith.me/2018/01/20/using
 - Azure Functions 1.0.29
 - .Net Standard 2.0
 
+## Getting Started
+
+1. Run the following command in NuGet Package Manager Console (targetting your Azure Function project):
+```
+install-package Umamimolecule.AzureFunctionsMiddleware
+```
+
+2. Set up your pipeline in your Azure Function
+
+_Note: Middleware pipelines are configured within each Azure Function's constructor.  This is unlike ASP.Net Core where the pipelines are defined within the Startup class, and this is due to the way the Azure functions runtime works where it does not expose any `IApplicationBuilder` type of bootstrapping._
+```
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.AspNetCore.Http;
+using Umamimolecule.AzureFunctionsMiddleware;
+
+namespace FunctionAppMiddlewarePOC
+{
+    public class MyGetFunction
+    {
+        private readonly IMiddlewarePipeline pipeline;
+
+        public MyGetFunction()
+        {
+            this.pipeline = new MiddlewarePipeline();
+            this.pipeline.UseCorrelationId(correlationIdHeaders)
+                         .UseQueryValidation<TQuery>()
+                         .Use(this.ExecuteAsync);            
+        }
+    }
+}
+```
+
+3. In your HTTP trigger function, execute your pipeline:
+```
+[FunctionName(nameof(MyGetFunction))]
+public async Task<IActionResult> Run(
+    [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
+{
+    return await this.pipeline.RunAsync();
+}
+
+private async Task<IActionResult> ExecuteAsync(HttpContext context)
+{
+    // Your function logic goes here...
+}
+```
+
+## Built-in middleware
+This package comes withthe followuing built-in middleware:
+
+### BodyModelValidationMiddleware
+Validates the body model for the request.  If successful, the body will be available in `HttpContext.Items["Body"]`.
+
+### CorrelationIdMiddleware
+Extracts a correlation ID from the request headers and sets the value to HttpContext.TraceIdentifier.  You can specify a collection of correlation ID headre names and the first matchin header will be used.  If no matching headers are found, a unique GUID will be used.
+
+### ExceptionHandlerMiddleware
+Allows exceptions to be handled and a custom response to be returned.
+
+### FunctionMiddleware
+Intended for your Azure Function implementation.
+
+### QueryModelValidationMiddleware
+Validates the query model for the request.  If successful, the query object will be available in `HttpContext.Items["Query"]`.
+
+### RequestDelegateMiddleware
+A general-purpose middleware for `RequestDelegate` instances.
+
+## Creating your own middleware
+Simply implement `IHttpMiddleware` or use the `HttpMiddleware` abstract class. Here's an example of some middleware to add a response header `x-request-date-utc` which contains the currnt UTC date and time of the request:
+```
+public class UtcRequestDateMiddleWare : HttpMiddleware
+{
+    public override Task InvokeAsync(HttpContext context)
+    {
+       context.Response.Headers["x-request-date-utc"] = System.DateTime.UtcNow.ToString("o");
+    }
+}
+```
