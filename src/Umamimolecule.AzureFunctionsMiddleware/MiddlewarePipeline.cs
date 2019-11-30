@@ -48,6 +48,10 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             {
                 await pipeline.First().InvokeAsync(context);
             }
+            else
+            {
+                throw new MiddlewarePipelineException($"No middleware configured");
+            }
 
             return new HttpResponseResult(context);
         }

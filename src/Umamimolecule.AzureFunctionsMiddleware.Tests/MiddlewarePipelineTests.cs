@@ -65,33 +65,30 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
         public async Task RunAsync_NoMiddleware_NoCustomExceptionHandler()
         {
             var instance = this.CreateInstance();
-            var result = await instance.RunAsync();
-            var objectResult = result.ShouldBeOfType<ObjectResult>();
-            objectResult.StatusCode.ShouldBe((int)HttpStatusCode.InternalServerError);
+            var exception = await Should.ThrowAsync<MiddlewarePipelineException>(() => instance.RunAsync());
         }
 
-        [Fact(DisplayName = "RunAsync should return expected response when last middleware does not return a response")]
-        public async Task RunAsync_LastMiddlewareNoResponse_NoCustomExceptionHandler()
-        {
-            var instance = this.CreateInstance();
-            var middleware = new Mock<IHttpMiddleware>();
-            instance.Use(middleware.Object);
-            var result = await instance.RunAsync();
-            var objectResult = result.ShouldBeOfType<ObjectResult>();
-            objectResult.StatusCode.ShouldBe((int)HttpStatusCode.InternalServerError);
-        }
+        //[Fact(DisplayName = "RunAsync should return expected response when last middleware does not return a response")]
+        //public async Task RunAsync_LastMiddlewareNoResponse_NoCustomExceptionHandler()
+        //{
+        //    var instance = this.CreateInstance();
+        //    var middleware = new Mock<IHttpMiddleware>();
+        //    instance.Use(middleware.Object);
+        //    var result = await instance.RunAsync();
+        //    var httpResponseResult = result.ShouldBeOfType<HttpResponseResult>();
+        //    await httpResponseResult.ExecuteResultAsync(new ActionContext(this.context, new Microsoft.AspNetCore.Routing.RouteData(), new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor()));
+        //    this.context.Response.StatusCode.ShouldBe((int)HttpStatusCode.InternalServerError);
+        //}
 
         [Fact(DisplayName = "RunAsync should return expected response when middleware throws BadRequestException")]
-        public async Task RunAsync_MiddlewareThrowsBadRequestException_NoCustomExceptionHandler()
+        public async Task RunAsync_MiddlewareThrowsBadRequestException_NoExceptionHandler()
         {
             var instance = this.CreateInstance();
             var middleware = new Mock<IHttpMiddleware>();
             middleware.Setup(x => x.InvokeAsync(It.IsAny<HttpContext>()))
                       .ThrowsAsync(new BadRequestException("oh no"));
             instance.Use(middleware.Object);
-            var result = await instance.RunAsync();
-            var objectResult = result.ShouldBeOfType<BadRequestObjectResult>();
-            objectResult.StatusCode.ShouldBe((int)HttpStatusCode.BadRequest);
+            var exception = await Should.ThrowAsync<BadRequestException>(() => instance.RunAsync());
         }
 
         [Fact(DisplayName = "RunAsync should return expected response")]
