@@ -1,9 +1,10 @@
 ﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Samples.ModelValidation.Pipelines;
 
-[assembly: FunctionsStartup(typeof(FunctionAppMiddlewarePOC.Startup))]
+[assembly: FunctionsStartup(typeof(Samples.ModelValidation.Startup))]
 
-namespace FunctionAppMiddlewarePOC
+namespace Samples.ModelValidation
 {
     public class Startup : FunctionsStartup
     {

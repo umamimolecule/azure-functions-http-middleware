@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
@@ -19,12 +20,17 @@ namespace Umamimolecule.AzureFunctionsMiddleware
 
         protected override async Task<(bool Success, string Error, T Model)> ValidateAsync(HttpContext context)
         {
-            var model = await this.CreateModelAsync(context);
-            List<ValidationResult> validationResults = new List<ValidationResult>();
+            (var model, var error) = await this.CreateModelAsync(context);
+            if (!string.IsNullOrEmpty(error))
+            {
+                return (false, error, model);
+            }
+
+            List <ValidationResult> validationResults = new List<ValidationResult>();
 
             if (!RecursiveValidator.TryValidateObject(model, validationResults, true))
             {
-                return (false, string.Join(", ", validationResults.Select(x => x.ErrorMessage)), model);
+                return (false, string.Join(", ", validationResults.Select(x => string.Join(", ", x.MemberNames) + ": " + x.ErrorMessage)), model);
             }
 
             context.Items[ContextItems.Body] = model;
@@ -32,7 +38,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             return (true, null, model);
         }
 
-        private async Task<T> CreateModelAsync(HttpContext context)
+        private async Task<(T model, string error)> CreateModelAsync(HttpContext context)
         {
             if (context.Request.Body != null)
             {
@@ -42,14 +48,22 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                 {
                     context.Request.Body.Position = 0;
                 }
-                var model = JsonConvert.DeserializeObject<T>(json);
-                if (model != null)
+
+                try
                 {
-                    return model;
+                    var model = JsonConvert.DeserializeObject<T>(json);
+                    if (model != null)
+                    {
+                        return (model, null);
+                    }
+                }
+                catch (Exception e)
+                {
+                    return (default(T), e.Message);
                 }
             }
 
-            return new T();
+            return (new T(), null);
         }
     }
 }

@@ -3,16 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29409.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleFunction", "ExampleFunction\ExampleFunction.csproj", "{2045A40E-C62C-4079-8D04-1599FB4E808F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelValidation", "samples\ModelValidation\ModelValidation.csproj", "{2045A40E-C62C-4079-8D04-1599FB4E808F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Umamimolecule.AzureFunctionsMiddleware", "Umamimolecule.AzureFunctionsMiddleware\Umamimolecule.AzureFunctionsMiddleware.csproj", "{DB977461-5C89-40BB-99D4-534358BD0558}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Umamimolecule.AzureFunctionsMiddleware", "src\Umamimolecule.AzureFunctionsMiddleware\Umamimolecule.AzureFunctionsMiddleware.csproj", "{DB977461-5C89-40BB-99D4-534358BD0558}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Umamimolecule.AzureFunctionsMiddleware.Tests", "Umamimolecule.AzureFunctionsMiddleware.Tests\Umamimolecule.AzureFunctionsMiddleware.Tests.csproj", "{E444B944-20E3-4A70-BF95-DB599C81FF0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Umamimolecule.AzureFunctionsMiddleware.Tests", "tests\Umamimolecule.AzureFunctionsMiddleware.Tests\Umamimolecule.AzureFunctionsMiddleware.Tests.csproj", "{E444B944-20E3-4A70-BF95-DB599C81FF0E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BB7CAA70-0929-4E40-940F-E9AC5B181C94}"
 	ProjectSection(SolutionItems) = preProject
-		..\test.runsettings = ..\test.runsettings
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+		test.runsettings = test.runsettings
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{E9D699A4-F2CF-4E51-AC62-E1B0A64DBF72}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C792CAB6-FED9-4EF3-B7C4-494C243A621A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +42,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2045A40E-C62C-4079-8D04-1599FB4E808F} = {E9D699A4-F2CF-4E51-AC62-E1B0A64DBF72}
+		{E444B944-20E3-4A70-BF95-DB599C81FF0E} = {C792CAB6-FED9-4EF3-B7C4-494C243A621A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D4606F1-A62A-417E-BD3D-92DE39CD96BD}
