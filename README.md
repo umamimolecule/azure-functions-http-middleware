@@ -4,6 +4,12 @@
 
 An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.
 
+## NuGet Package
+
+https://www.nuget.org/packages/Umamimolecule.AzureFunctionsMiddleware/
+
+## Introduction
+
 It lets you do stuff like this in your function:
 
 ```
@@ -80,7 +86,7 @@ namespace MyFunctionApp
 
 ## Motivation
 
-After having written several HTTP-triggered Azure Functions and writing the same cross-cutting concerns over and over for model validation, error handling, correlation IDs and such, it seemed appropriate to bundle all this into a package that can be re-used
+After having written several HTTP-triggered Azure Functions and writing the same cross-cutting concerns over and over for model validation, error handling, correlation IDs and such, it seemed appropriate to bundle all this into a package that can be re-used.
 
 This project was inspired by [this blog post](https://dasith.me/2018/01/20/using-azure-functions-httptrigger-as-web-api/) by Dasith Wijesiriwardena.
 
