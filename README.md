@@ -151,7 +151,7 @@ This package comes with the following built-in middleware:
 Validates the body model for the request.  If successful, the body will be available in `HttpContext.Items["Body"]`.
 
 ### CorrelationIdMiddleware
-Extracts a correlation ID from the request headers and sets the value to `HttpContext.TraceIdentifier`.  You can specify a collection of correlation ID headre names and the first matchin header will be used.  If no matching headers are found, a unique GUID will be used.
+Extracts a correlation ID from the request headers and sets the value to `HttpContext.TraceIdentifier`.  You can specify a collection of correlation ID header names and the first matching header will be used.  If no matching headers are found, a unique GUID will be used.
 
 ### ExceptionHandlerMiddleware
 Allows exceptions to be handled and a custom response to be returned.
@@ -166,7 +166,7 @@ Validates the query model for the request.  If successful, the query object will
 A general-purpose middleware for `RequestDelegate` instances.
 
 ## Creating your own middleware
-You can implement `IHttpMiddleware` or sub-class the `HttpMiddleware` abstract class. Here's an example of some middleware to add a response header `x-request-date-utc` which contains the currnt UTC date and time of the request:
+You can implement `IHttpMiddleware` or sub-class the `HttpMiddleware` abstract class. Here's an example of some middleware to add a response header `x-request-date-utc` which contains the current UTC date and time of the request:
 ```
 public class UtcRequestDateMiddleWare : HttpMiddleware
 {
