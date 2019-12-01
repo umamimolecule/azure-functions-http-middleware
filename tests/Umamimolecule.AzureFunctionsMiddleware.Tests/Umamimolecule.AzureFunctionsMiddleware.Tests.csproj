@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -18,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Umamimolecule.AzureFunctionsMiddleware\Umamimolecule.AzureFunctionsMiddleware.csproj" />
+    <ProjectReference Include="..\..\src\Umamimolecule.AzureFunctionsMiddleware\Umamimolecule.AzureFunctionsMiddleware.csproj" />
   </ItemGroup>
 
 </Project>
