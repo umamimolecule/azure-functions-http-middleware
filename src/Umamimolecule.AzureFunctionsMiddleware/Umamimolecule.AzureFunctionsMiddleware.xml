@@ -91,6 +91,11 @@
             The error code for invalid body payload.
             </summary>
         </member>
+        <member name="F:Umamimolecule.AzureFunctionsMiddleware.ErrorCodes.BadRequest">
+            <summary>
+            The error code for bad request.
+            </summary>
+        </member>
         <member name="F:Umamimolecule.AzureFunctionsMiddleware.ErrorCodes.InternalServerError">
             <summary>
             The error code for internal server error.
