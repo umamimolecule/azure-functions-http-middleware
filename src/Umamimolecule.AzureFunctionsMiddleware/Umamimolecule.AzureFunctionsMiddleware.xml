@@ -1,0 +1,436 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Umamimolecule.AzureFunctionsMiddleware</name>
+    </assembly>
+    <members>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.BadRequestException">
+            <summary>
+            Exception that is thrown within validators.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.BadRequestException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.BadRequestException"/> class.
+            </summary>
+            <param name="message">The message describing the error.</param>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.BodyModelValidationMiddleware`1">
+            <summary>
+            Middleware to perform validation body payload.
+            </summary>
+            <typeparam name="T">The body payload type.</typeparam>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.BodyModelValidationMiddleware`1.ErrorCode">
+            <summary>
+            Gets the error code to use when validation fails.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.BodyModelValidationMiddleware`1.ValidateAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Validates the body payload.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>The validation results.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.ContentTypes">
+            <summary>
+            Contains constants for known content types.
+            </summary>
+        </member>
+        <member name="F:Umamimolecule.AzureFunctionsMiddleware.ContentTypes.ApplicationJson">
+            <summary>
+            The content type value for application/json.
+            </summary>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.ContextItems">
+            <summary>
+            Contains keys for HTTP context items.
+            </summary>
+        </member>
+        <member name="F:Umamimolecule.AzureFunctionsMiddleware.ContextItems.Query">
+            <summary>
+            The key for the query parameter model.
+            </summary>
+        </member>
+        <member name="F:Umamimolecule.AzureFunctionsMiddleware.ContextItems.Body">
+            <summary>
+            The key for the body payload model.
+            </summary>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.CorrelationIdMiddleware">
+            <summary>
+            Middleware to extract correlation identifier from a request header.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.CorrelationIdMiddleware.#ctor(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.CorrelationIdMiddleware"/> class.
+            </summary>
+            <param name="correlationIdHeaders">The collection of headers which will be inspected, in order.  The first matching header found will be used for the correlation ID.</param>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.CorrelationIdMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Runs the middleware.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.ErrorCodes">
+            <summary>
+            Contains error codes.
+            </summary>
+        </member>
+        <member name="F:Umamimolecule.AzureFunctionsMiddleware.ErrorCodes.InvalidQueryParameters">
+            <summary>
+            The error code for invalid query parameters.
+            </summary>
+        </member>
+        <member name="F:Umamimolecule.AzureFunctionsMiddleware.ErrorCodes.InvalidBody">
+            <summary>
+            The error code for invalid body payload.
+            </summary>
+        </member>
+        <member name="F:Umamimolecule.AzureFunctionsMiddleware.ErrorCodes.InternalServerError">
+            <summary>
+            The error code for internal server error.
+            </summary>
+        </member>
+        <member name="F:Umamimolecule.AzureFunctionsMiddleware.ErrorCodes.Unauthorized">
+            <summary>
+            The error code for unauthorized.
+            </summary>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.ExceptionHandlerMiddleware">
+            <summary>
+            Exception handling middleware.
+            </summary>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.ExceptionHandlerMiddleware.DefaultExceptionHandler">
+            <summary>
+            Gets a default exception handler to provide basic support for model validation failure and unexpected exceptions.
+            </summary>
+            <returns>The response to return from the Azure function.</returns>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.ExceptionHandlerMiddleware.ExceptionHandler">
+            <summary>
+            Gets or sets the function to determine what response should be returned by the exception handler.
+            </summary>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.ExceptionHandlerMiddleware.LogExceptionAsync">
+            <summary>
+            Gets or sets the handler function to log exceptions.  Optional.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.ExceptionHandlerMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Runs the middleware.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.FunctionMiddleware">
+            <summary>
+            Middleware to allow an asynchronous operation to be executed.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.FunctionMiddleware.#ctor(System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.FunctionMiddleware"/> class.
+            </summary>
+            <param name="func">The task to be executed.</param>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.FunctionMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Runs the middleware.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.Headers">
+            <summary>
+            Contains header names.
+            </summary>
+        </member>
+        <member name="F:Umamimolecule.AzureFunctionsMiddleware.Headers.ContentType">
+            <summary>
+            The Content-Type header name.
+            </summary>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.HttpContextExtensions">
+            <summary>
+            Contains extension methods for <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> instances.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.HttpContextExtensions.ProcessActionResultAsync(Microsoft.AspNetCore.Http.HttpContext,Microsoft.AspNetCore.Mvc.IActionResult)">
+            <summary>
+            Processes an action result and applies to the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/> instance.
+            </summary>
+            <param name="context">The HTTP context.</param>
+            <param name="result">The aciton result to process.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.HttpMiddleware">
+            <summary>
+            Base class for all middleware.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.HttpMiddleware.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.HttpMiddleware"/> class.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.HttpMiddleware.#ctor(Umamimolecule.AzureFunctionsMiddleware.IHttpMiddleware)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.HttpMiddleware"/> class.
+            </summary>
+            <param name="next">The next middleware to be run.</param>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.HttpMiddleware.Next">
+            <summary>
+            Gets or sets the next middleware to be executed after this one.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.HttpMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Runs the middleware.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.HttpResponseResult">
+            <summary>
+            An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> implementation to convert HTTP context.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.HttpResponseResult.#ctor(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.HttpResponseResult"/> class.
+            </summary>
+            <param name="context">The HTTP context.</param>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.HttpResponseResult.Context">
+            <summary>
+            Gets the HTTP context.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.HttpResponseResult.ExecuteResultAsync(Microsoft.AspNetCore.Mvc.ActionContext)">
+            <summary>
+            Executes the result operation of the action method asynchronously.
+            </summary>
+            <param name="context">
+            The context in which the result is executed. The context information
+            includes information about the action that was executed and request
+            information.
+            </param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.IHttpMiddleware">
+            <summary>
+            Represents a middleware component.
+            </summary>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.IHttpMiddleware.Next">
+            <summary>
+            Gets or sets the next middleware to be executed after this one.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.IHttpMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Runs the middleware.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline">
+            <summary>
+            Represents the middleware pipeline.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline.Use(Umamimolecule.AzureFunctionsMiddleware.IHttpMiddleware)">
+            <summary>
+            Adds middleware to the pipeline.
+            </summary>
+            <param name="middleware">The middleware to add.</param>
+            <returns>The pipeline.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline.RunAsync">
+            <summary>
+            Executes the pipeline.
+            </summary>
+            <returns>The value to returned from the Azure function.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipeline">
+            <summary>
+            The middleware pipeline.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipeline.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipeline"/> class.
+            </summary>
+            <param name="httpContextAccessor">The HTTP context accessor.</param>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipeline.Use(Umamimolecule.AzureFunctionsMiddleware.IHttpMiddleware)">
+            <summary>
+            Adds middleware to the pipeline.
+            </summary>
+            <param name="middleware">The middleware to add.</param>
+            <returns>The pipeline.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipeline.RunAsync">
+            <summary>
+            Executes the pipeline.
+            </summary>
+            <returns>The value to returned from the Azure function.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineException">
+            <summary>
+            Exception which is thrown when the pipeline is misconfigured.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineException"/> class.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineException"/> class.
+            </summary>
+            <param name="message">The message describing the error.</param>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions">
+            <summary>
+            Contains extension methods for <see cref="T:Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline"/> instances.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.Use(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}})">
+            <summary>
+            Adds an Azure Function middleware to the pipeline.
+            </summary>
+            <param name="pipeline">The pipeline.</param>
+            <param name="func">The function to add.</param>
+            <returns>The pipeline instance.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.Use(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Adds a request delegate middleware to the pipeline.
+            </summary>
+            <param name="pipeline">The pipeline.</param>
+            <param name="requestDelegate">The request delegate to add.</param>
+            <returns>The pipeline instance.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseCorrelationId(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Adds correlation ID middleware to the pipeline.
+            </summary>
+            <param name="pipeline">The pipeline.</param>
+            <param name="correlationIdHeaders">The colleciton of request headers that contain the correlation ID.  The first match is used.</param>
+            <returns>The pipeline instance.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseQueryValidation``1(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline)">
+            <summary>
+            Adds query parameter validation middleware to the pipeline.
+            </summary>
+            <typeparam name="T">The query model type.</typeparam>
+            <param name="pipeline">The pipeline.</param>
+            <returns>The pipeline instance.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseBodyValidation``1(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline)">
+            <summary>
+            Adds body payload validation middleware to the pipeline.
+            </summary>
+            <typeparam name="T">The body model type.</typeparam>
+            <param name="pipeline">The pipeline.</param>
+            <returns>The pipeline instance.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.QueryModelValidationMiddleware`1">
+            <summary>
+            Middleware to perform validation of the query parameters.
+            </summary>
+            <typeparam name="T">The query parameter type.</typeparam>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.QueryModelValidationMiddleware`1.ErrorCode">
+            <summary>
+            Gets the error code to use when validation fails.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.QueryModelValidationMiddleware`1.ValidateAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Validates the query parameters.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>The validation results.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.RecursiveValidator">
+            <summary>
+            Recursively validates all properties and child properties of a model.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.RecursiveValidator.TryValidateObject(System.Object,System.Collections.Generic.ICollection{System.ComponentModel.DataAnnotations.ValidationResult},System.Boolean)">
+            <summary>
+            Recursively validates <paramref name="instance"/>.
+            </summary>
+            <param name="instance">The object to validate.</param>
+            <param name="results">A collection to hold each failed validation.</param>
+            <param name="validateAllProperties">true to validate all properties; if false, only required attributes are validated.</param>
+            <returns>true if the object validates; otherwise, false.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="instance"/> is null.</exception>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.RecursiveValidator.TryValidateObject(System.Object,System.Collections.Generic.ICollection{System.ComponentModel.DataAnnotations.ValidationResult},System.Boolean,System.String)">
+            <summary>
+            Recursively validates <paramref name="instance"/>.
+            </summary>
+            <param name="instance">The object to validate.</param>
+            <param name="results">A collection to hold each failed validation.</param>
+            <param name="validateAllProperties">true to validate all properties; if false, only required attributes are validated.</param>
+            <param name="prefix">The prefix to append to the field name when validation fails.</param>
+            <returns>true if the object validates; otherwise, false.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="instance"/> is null.</exception>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.RequestDelegateMiddleware">
+            <summary>
+            Middleware to allow a request delegate to be executed.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.RequestDelegateMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.RequestDelegateMiddleware"/> class.
+            </summary>
+            <param name="requestDelegate">The request delegate to be executed.</param>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.RequestDelegateMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Runs the middleware.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.ValidationMiddleware`1">
+            <summary>
+            Base class for validation middleware.
+            </summary>
+            <typeparam name="T">The object type containing the model to validate.</typeparam>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.ValidationMiddleware`1.ErrorCode">
+            <summary>
+            Gets the error code to use when validation fails.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.ValidationMiddleware`1.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Runs the middleware.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.ValidationMiddleware`1.ValidateAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Validates the model.
+            </summary>
+            <param name="context">The HTTP context.</param>
+            <returns>The validation results.</returns>
+        </member>
+    </members>
+</doc>

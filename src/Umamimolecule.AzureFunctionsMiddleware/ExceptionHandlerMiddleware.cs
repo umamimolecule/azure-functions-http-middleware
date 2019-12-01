@@ -7,10 +7,13 @@ using Newtonsoft.Json;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
 {
+    /// <summary>
+    /// Exception handling middleware.
+    /// </summary>
     public class ExceptionHandlerMiddleware : HttpMiddleware
     {
         /// <summary>
-        /// A default exception handler to provide basic support for model validation failure and unexpected exceptions.
+        /// Gets a default exception handler to provide basic support for model validation failure and unexpected exceptions.
         /// </summary>
         /// <returns>The response to return from the Azure function.</returns>
         public static Func<Exception, HttpContext, Task<IActionResult>> DefaultExceptionHandler
@@ -29,8 +32,8 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                             error = new
                             {
                                 code = "BAD_REQUEST",
-                                message = exception.Message
-                            }
+                                message = exception.Message,
+                            },
                         };
 
                         result = new BadRequestObjectResult(response);
@@ -43,13 +46,13 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                             error = new
                             {
                                 code = "INTERNAL_SERVER_ERROR",
-                                message = "An unexpected error occurred in the application"
-                            }
+                                message = "An unexpected error occurred in the application",
+                            },
                         };
 
                         result = new ObjectResult(response)
                         {
-                            StatusCode = (int)HttpStatusCode.InternalServerError
+                            StatusCode = (int)HttpStatusCode.InternalServerError,
                         };
                     }
 
@@ -68,6 +71,11 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         public Func<Exception, Task> LogExceptionAsync { get; set; }
 
+        /// <summary>
+        /// Runs the middleware.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public override async Task InvokeAsync(HttpContext context)
         {
             if (this.Next == null)
@@ -97,7 +105,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                             code = "INTERNAL_SERVER_ERROR",
                             message = "An internal server error occurred",
                         },
-                        correlationId = context.TraceIdentifier
+                        correlationId = context.TraceIdentifier,
                     };
 
                     await HttpResponseWritingExtensions.WriteAsync(context.Response, JsonConvert.SerializeObject(content));

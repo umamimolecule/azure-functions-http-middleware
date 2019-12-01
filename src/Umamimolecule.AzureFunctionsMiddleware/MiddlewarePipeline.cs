@@ -14,6 +14,10 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         private readonly List<IHttpMiddleware> pipeline = new List<IHttpMiddleware>();
         private readonly IHttpContextAccessor httpContextAccessor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MiddlewarePipeline"/> class.
+        /// </summary>
+        /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         public MiddlewarePipeline(IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = httpContextAccessor;
@@ -26,12 +30,12 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <returns>The pipeline.</returns>
         public IMiddlewarePipeline Use(IHttpMiddleware middleware)
         {
-            if (pipeline.Any())
+            if (this.pipeline.Any())
             {
-                pipeline.Last().Next = middleware;
+                this.pipeline.Last().Next = middleware;
             }
 
-            pipeline.Add(middleware);
+            this.pipeline.Add(middleware);
 
             return this;
         }
@@ -44,9 +48,9 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         {
             var context = this.httpContextAccessor.HttpContext;
 
-            if (pipeline.Any())
+            if (this.pipeline.Any())
             {
-                await pipeline.First().InvokeAsync(context);
+                await this.pipeline.First().InvokeAsync(context);
             }
             else
             {

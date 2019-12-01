@@ -21,9 +21,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             this.func = func;
         }
 
+        /// <summary>
+        /// Runs the middleware.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public override async Task InvokeAsync(HttpContext context)
         {
-            var result = await func(context);
+            var result = await this.func(context);
             await context.ProcessActionResultAsync(result);
         }
     }

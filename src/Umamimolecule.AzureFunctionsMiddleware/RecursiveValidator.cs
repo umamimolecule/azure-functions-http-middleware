@@ -17,7 +17,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <param name="results">A collection to hold each failed validation.</param>
         /// <param name="validateAllProperties">true to validate all properties; if false, only required attributes are validated.</param>
         /// <returns>true if the object validates; otherwise, false.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is null</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is null.</exception>
         public static bool TryValidateObject(object instance, ICollection<ValidationResult> results, bool validateAllProperties)
         {
             return TryValidateObject(instance, results, validateAllProperties, null);
@@ -31,7 +31,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <param name="validateAllProperties">true to validate all properties; if false, only required attributes are validated.</param>
         /// <param name="prefix">The prefix to append to the field name when validation fails.</param>
         /// <returns>true if the object validates; otherwise, false.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is null</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is null.</exception>
         private static bool TryValidateObject(object instance, ICollection<ValidationResult> results, bool validateAllProperties, string prefix)
         {
             if (instance is null)

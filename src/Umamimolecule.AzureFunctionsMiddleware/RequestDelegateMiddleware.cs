@@ -19,9 +19,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             this.requestDelegate = requestDelegate;
         }
 
+        /// <summary>
+        /// Runs the middleware.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public override Task InvokeAsync(HttpContext context)
         {
-            return requestDelegate(context);
+            return this.requestDelegate(context);
         }
     }
 }

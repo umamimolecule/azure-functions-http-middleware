@@ -14,7 +14,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         private readonly IEnumerable<string> correlationIdHeaders;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FunctionMiddleware"/> class.
+        /// Initializes a new instance of the <see cref="CorrelationIdMiddleware"/> class.
         /// </summary>
         /// <param name="correlationIdHeaders">The collection of headers which will be inspected, in order.  The first matching header found will be used for the correlation ID.</param>
         public CorrelationIdMiddleware(IEnumerable<string> correlationIdHeaders)
@@ -22,9 +22,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             this.correlationIdHeaders = correlationIdHeaders;
         }
 
+        /// <summary>
+        /// Runs the middleware.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public override async Task InvokeAsync(HttpContext context)
         {
-            var correlationId = this.GetCorrelationId(context.Request, out string matchingHeader);
+            var correlationId = this.GetCorrelationId(context.Request);
             context.TraceIdentifier = correlationId;
 
             if (this.Next != null)
@@ -33,15 +38,13 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             }
         }
 
-        private string GetCorrelationId(HttpRequest request, out string matchingHeader)
+        private string GetCorrelationId(HttpRequest request)
         {
-            matchingHeader = null;
             foreach (var correlationIdHeader in this.correlationIdHeaders)
             {
                 if (request.Headers.TryGetValue(correlationIdHeader, out StringValues value) &&
                     !StringValues.IsNullOrEmpty(value))
                 {
-                    matchingHeader = correlationIdHeader;
                     return value.ToString();
                 }
             }

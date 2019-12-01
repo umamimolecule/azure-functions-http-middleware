@@ -58,6 +58,7 @@ namespace Samples.ModelValidation.Pipelines
             MiddlewarePipeline pipeline = new MiddlewarePipeline(this.httpContextAccessor);
             return pipeline.UseCorrelationId(correlationIdHeaders)
                            .UseBodyValidation<TBody>()
+                           .UseBodyValidation<TBody>()
                            .Use(func);
         }
 

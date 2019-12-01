@@ -14,10 +14,18 @@ namespace Umamimolecule.AzureFunctionsMiddleware
     /// </summary>
     /// <typeparam name="T">The body payload type.</typeparam>
     public class BodyModelValidationMiddleware<T> : ValidationMiddleware<T>
-        where T: new()
+        where T : new()
     {
+        /// <summary>
+        /// Gets the error code to use when validation fails.
+        /// </summary>
         public override string ErrorCode => ErrorCodes.InvalidBody;
 
+        /// <summary>
+        /// Validates the body payload.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The validation results.</returns>
         protected override async Task<(bool Success, string Error, T Model)> ValidateAsync(HttpContext context)
         {
             (var model, var error) = await this.CreateModelAsync(context);
@@ -26,7 +34,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                 return (false, error, model);
             }
 
-            List <ValidationResult> validationResults = new List<ValidationResult>();
+            List<ValidationResult> validationResults = new List<ValidationResult>();
 
             if (!RecursiveValidator.TryValidateObject(model, validationResults, true))
             {
@@ -42,11 +50,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         {
             if (context.Request.Body != null)
             {
-                StreamReader reader = new StreamReader(context.Request.Body);
+                context.Request.EnableBuffering();
+#pragma warning disable IDE0067 // Dispose objects before losing scope
+                var reader = new StreamReader(context.Request.Body);
+#pragma warning restore IDE0067 // Dispose objects before losing scope
                 var json = await reader.ReadToEndAsync();
                 if (context.Request.Body.CanSeek)
                 {
-                    context.Request.Body.Position = 0;
+                    context.Request.Body.Seek(0, SeekOrigin.Begin);
                 }
 
                 try

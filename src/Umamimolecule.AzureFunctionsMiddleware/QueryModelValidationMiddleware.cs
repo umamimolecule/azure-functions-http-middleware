@@ -14,8 +14,16 @@ namespace Umamimolecule.AzureFunctionsMiddleware
     public class QueryModelValidationMiddleware<T> : ValidationMiddleware<T>
         where T : new()
     {
+        /// <summary>
+        /// Gets the error code to use when validation fails.
+        /// </summary>
         public override string ErrorCode => ErrorCodes.InvalidQueryParameters;
 
+        /// <summary>
+        /// Validates the query parameters.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The validation results.</returns>
         protected override async Task<(bool Success, string Error, T Model)> ValidateAsync(HttpContext context)
         {
             var model = await this.CreateModelAsync(context);

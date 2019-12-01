@@ -14,12 +14,30 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet>Umamimolecule.AzureFunctionsMiddleware.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile>C:\Code\github\umamimolecule\azure-functions-http-middleware\src\Umamimolecule.AzureFunctionsMiddleware\Umamimolecule.AzureFunctionsMiddleware.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet>Umamimolecule.AzureFunctionsMiddleware.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile>C:\Code\github\umamimolecule\azure-functions-http-middleware\src\Umamimolecule.AzureFunctionsMiddleware\Umamimolecule.AzureFunctionsMiddleware.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="microsoft.aspnetcore.http" Version="2.2.2" />
     <PackageReference Include="microsoft.aspnetcore.mvc.abstractions" Version="2.2.0" />
     <PackageReference Include="microsoft.aspnetcore.mvc.core" Version="2.2.5" />
     <PackageReference Include="microsoft.extensions.logging" Version="2.1.0" />
     <PackageReference Include="microsoft.extensions.logging.Abstractions" Version="2.2.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
