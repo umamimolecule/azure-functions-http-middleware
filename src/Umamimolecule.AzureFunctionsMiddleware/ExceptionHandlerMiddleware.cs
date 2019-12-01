@@ -31,7 +31,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                             correlationId = context.TraceIdentifier,
                             error = new
                             {
-                                code = "BAD_REQUEST",
+                                code = ErrorCodes.BadRequest,
                                 message = exception.Message,
                             },
                         };
@@ -45,7 +45,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                             correlationId = context.TraceIdentifier,
                             error = new
                             {
-                                code = "INTERNAL_SERVER_ERROR",
+                                code = ErrorCodes.InternalServerError,
                                 message = "An unexpected error occurred in the application",
                             },
                         };
@@ -102,7 +102,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                     {
                         error = new
                         {
-                            code = "INTERNAL_SERVER_ERROR",
+                            code = ErrorCodes.InternalServerError,
                             message = "An internal server error occurred",
                         },
                         correlationId = context.TraceIdentifier,

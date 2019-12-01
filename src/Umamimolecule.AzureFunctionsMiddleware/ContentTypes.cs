@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains constants for known content types.
     /// </summary>
-    public static class ContentTypes
+    internal static class ContentTypes
     {
         /// <summary>
         /// The content type value for application/json.

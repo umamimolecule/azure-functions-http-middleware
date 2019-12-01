@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains error codes.
     /// </summary>
-    public static class ErrorCodes
+    internal static class ErrorCodes
     {
         /// <summary>
         /// The error code for invalid query parameters.
@@ -14,6 +14,11 @@
         /// The error code for invalid body payload.
         /// </summary>
         public const string InvalidBody = "INVALID_BODY";
+
+        /// <summary>
+        /// The error code for bad request.
+        /// </summary>
+        public const string BadRequest = "BAD_REQUEST";
 
         /// <summary>
         /// The error code for internal server error.

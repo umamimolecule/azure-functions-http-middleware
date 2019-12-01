@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains header names.
     /// </summary>
-    public static class Headers
+    internal static class Headers
     {
         /// <summary>
         /// The Content-Type header name.
