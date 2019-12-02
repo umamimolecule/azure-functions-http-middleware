@@ -109,7 +109,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Umamimolecule.AzureFunctionsMiddleware;
 
-namespace FunctionAppMiddlewarePOC
+namespace Example
 {
     public class MyGetFunction
     {
@@ -118,8 +118,7 @@ namespace FunctionAppMiddlewarePOC
         public MyGetFunction()
         {
             this.pipeline = new MiddlewarePipeline();
-            this.pipeline.UseCorrelationId(correlationIdHeaders)
-                         .UseQueryValidation<TQuery>()
+            this.pipeline.UseCorrelationId(new string[] { "x-request-id" })
                          .Use(this.ExecuteAsync);            
         }
     }
@@ -128,17 +127,19 @@ namespace FunctionAppMiddlewarePOC
 
 3. In your HTTP trigger function, execute your pipeline:
 ```
-[FunctionName(nameof(MyGetFunction))]
-public async Task<IActionResult> Run(
+    [FunctionName(nameof(MyGetFunction))]
+    public async Task<IActionResult> Run(
     [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
-{
-    return await this.pipeline.RunAsync();
-}
+    {
+        return await this.pipeline.RunAsync();
+    }
 
-private async Task<IActionResult> ExecuteAsync(HttpContext context)
-{
-    // Your function logic goes here...
-}
+    private async Task<IActionResult> ExecuteAsync(HttpContext context)
+    {
+        var correlationId = context.TraceIdentifier;
+        
+        // Your function logic goes here...
+    }
 ```
 ## Samples
 
