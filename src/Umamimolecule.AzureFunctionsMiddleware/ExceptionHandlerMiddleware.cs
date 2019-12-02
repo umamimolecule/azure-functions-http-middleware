@@ -97,7 +97,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                 if (this.ExceptionHandler == null)
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.Headers[Headers.ContentType] = ContentTypes.ApplicationJson;
+                    context.Response.ContentType = ContentTypes.ApplicationJson;
                     dynamic content = new
                     {
                         error = new
