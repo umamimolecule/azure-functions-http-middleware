@@ -52,11 +52,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
 
             foreach (var prop in instance.GetType().GetProperties())
             {
-                if (prop.GetSetMethod() == null)
-                {
-                    continue;
-                }
-                else if (prop.PropertyType != typeof(string))
+                if (prop.PropertyType != typeof(string))
                 {
                     var value = prop.GetValue(instance);
                     if (value == null)
