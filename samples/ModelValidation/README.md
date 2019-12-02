@@ -8,11 +8,11 @@ Submit a POST request with the following JSON payload to the endpoint `http://lo
 
 ```
 {
-	"name": "A",
-	"user": {
-		"id": 1,
-		"name": "Fred"
-	}
+  "name": "A",
+  "user": {
+    "id": 1,
+    "name": "Fred"
+  }
 }
 ```
 
@@ -20,16 +20,16 @@ This will return 200 OK and send back the received body:
 
 ```
 {
-    "correlationId": "...",
-    "message": "OK",
-    "body": {
-        "name": "Test",
-        "user": {
-            "id": 1,
-            "name": "Fred",
-            "description": null
-        }
-    }
+  "correlationId": "...",
+  "message": "OK",
+  "body": {
+    "name": "Test",
+    "user": {
+       "id": 1,
+       "name": "Fred",
+       "description": null
+     }
+  }
 }
 ```
 
@@ -37,11 +37,11 @@ Now try the following payload:
 
 ```
 {
-	"name": null,
-	"user": {
-		"id": 1,
-		"name": "Fred"
-	}
+  "name": null,
+  "user": {
+    "id": 1,
+    "name": "Fred"
+  }
 }
 ```
 
@@ -49,11 +49,11 @@ and observe it returns 400 Bad Request with a description of the error:
 
 ```
 {
-    "correlationId": "...",
-    "error": {
-        "code": "INVALID_BODY",
-        "message": "The Name field is required."
-    }
+  "correlationId": "...",
+  "error": {
+    "code": "INVALID_BODY",
+    "message": "The Name field is required."
+  }
 }
 ```
 
@@ -61,10 +61,10 @@ Note that body validation can handle a complex nested object.  Submit the follow
 
 ```
 {
-	"name": "Test",
-	"user": {
-		"id": 1
-	}
+  "name": "Test",
+  "user": {
+    "id": 1
+  }
 }
 ```
 
@@ -72,11 +72,11 @@ and the resposne indicates a nested child property is invalid:
 
 ```
 {
-    "correlationId": "...",
-    "error": {
-        "code": "INVALID_BODY",
-        "message": "User.Name: The Name field is required."
-    }
+  "correlationId": "...",
+  "error": {
+    "code": "INVALID_BODY",
+    "message": "User.Name: The Name field is required."
+  }
 }
 ```
 
@@ -88,12 +88,12 @@ This will return 200 OK and send back the received body:
 
 ```
 {
-    "correlationId": "...",
-    "message": "OK",
-    "query": {
-        "name": "Fred",
-        "description": null
-    }
+  "correlationId": "...",
+  "message": "OK",
+  "query": {
+    "name": "Fred",
+    "description": null
+  }
 }
 ```
 
@@ -103,10 +103,10 @@ and observe it returns 400 Bad Request with a description of the error:
 
 ```
 {
-    "correlationId": "...",
-    "error": {
-        "code": "INVALID_QUERY_PARAMETERS",
-        "message": "The Name field is required."
-    }
+  "correlationId": "...",
+  "error": {
+    "code": "INVALID_QUERY_PARAMETERS",
+    "message": "The Name field is required."
+  }
 }
 ```
