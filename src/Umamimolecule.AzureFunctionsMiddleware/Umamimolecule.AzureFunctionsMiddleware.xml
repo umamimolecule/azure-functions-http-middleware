@@ -350,6 +350,15 @@
             <param name="pipeline">The pipeline.</param>
             <returns>The pipeline instance.</returns>
         </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseExceptionHandling(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{System.Exception,Microsoft.AspNetCore.Http.HttpContext,System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}},System.Func{System.Exception,System.Threading.Tasks.Task})">
+            <summary>
+            Adds exception handling middleware to the pipeline.
+            </summary>
+            <param name="pipeline">The pipeline.</param>
+            <param name="exceptionHandler">An optional handler to process exceptions.  Leave null to use the default exception handler.</param>
+            <param name="loggerHandler">An optional handler to log exceptions.</param>
+            <returns>The pipeline instance.</returns>
+        </member>
         <member name="T:Umamimolecule.AzureFunctionsMiddleware.QueryModelValidationMiddleware`1">
             <summary>
             Middleware to perform validation of the query parameters.

@@ -67,5 +67,26 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         {
             return pipeline.Use(new BodyModelValidationMiddleware<T>());
         }
+
+        /// <summary>
+        /// Adds exception handling middleware to the pipeline.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="exceptionHandler">An optional handler to process exceptions.  Leave null to use the default exception handler.</param>
+        /// <param name="loggerHandler">An optional handler to log exceptions.</param>
+        /// <returns>The pipeline instance.</returns>
+        public static IMiddlewarePipeline UseExceptionHandling(
+            this IMiddlewarePipeline pipeline,
+            Func<Exception, HttpContext, Task<IActionResult>> exceptionHandler = null,
+            Func<Exception, Task> loggerHandler = null)
+        {
+            var middleware = new ExceptionHandlerMiddleware()
+            {
+                ExceptionHandler = exceptionHandler ?? ExceptionHandlerMiddleware.DefaultExceptionHandler,
+                LogExceptionAsync = loggerHandler,
+            };
+
+            return pipeline.Use(middleware);
+        }
     }
 }
