@@ -15,18 +15,23 @@
     <FileVersion>1.2.1.0</FileVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CodeAnalysisRuleSet>Umamimolecule.AzureFunctionsMiddleware.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>C:\Code\github\umamimolecule\azure-functions-http-middleware\src\Umamimolecule.AzureFunctionsMiddleware\Umamimolecule.AzureFunctionsMiddleware.xml</DocumentationFile>
+    <DocumentationFile>Umamimolecule.AzureFunctionsMiddleware.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <CodeAnalysisRuleSet>Umamimolecule.AzureFunctionsMiddleware.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <DocumentationFile>C:\Code\github\umamimolecule\azure-functions-http-middleware\src\Umamimolecule.AzureFunctionsMiddleware\Umamimolecule.AzureFunctionsMiddleware.xml</DocumentationFile>
+    <DocumentationFile>Umamimolecule.AzureFunctionsMiddleware.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
