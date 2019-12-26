@@ -11,6 +11,7 @@
     <PackageTags>Azure Functions Http Middleware</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageReleaseNotes>https://github.com/umamimolecule/azure-functions-http-middleware/blob/master/CHANGELOG.md#1.2.2</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>1.2.2</Version>
@@ -38,6 +39,10 @@
     <PackageReference Include="microsoft.aspnetcore.mvc.core" Version="2.2.5" />
     <PackageReference Include="microsoft.extensions.logging" Version="2.1.0" />
     <PackageReference Include="microsoft.extensions.logging.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
