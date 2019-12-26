@@ -2,13 +2,14 @@
 <package >
   <metadata minClientVersion="2.5">
     <id>Umamimolecule.AzureFunctionsMiddleware</id>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
     <title>Umamimolecule.AzureFunctionsMiddleware</title>
     <authors>Umamimolecule</authors>
     <owners>Umamimolecule</owners>
     <projectUrl>https://github.com/umamimolecule/azure-functions-http-middleware</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.</description>
+    <releaseNotes>https://github.com/umamimolecule/azure-functions-http-middleware/blob/master/CHANGELOG.md#1.2.2</releaseNotes>
     <tags>Azure Functions Http Middleware</tags>
     <dependencies>
       <dependency id="microsoft.aspnetcore.http" version="2.2.2" />

@@ -2,7 +2,7 @@
 
 <a name="1.2.2" />
 
-## [1.2.2] - Not yet released
+## [1.2.2] - 2019-12-26
 
 ### Added
  - Example code for exception handler middleware.

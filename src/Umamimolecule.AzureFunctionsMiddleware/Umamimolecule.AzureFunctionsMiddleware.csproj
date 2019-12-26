@@ -9,17 +9,15 @@
     <RepositoryUrl>https://github.com/umamimolecule/azure-functions-http-middleware</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Azure Functions Http Middleware</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.2.1</Version>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
-    <FileVersion>1.2.1.0</FileVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReleaseNotes>https://github.com/umamimolecule/azure-functions-http-middleware/blob/master/CHANGELOG.md#1.2.2</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.2.2</Version>
+    <AssemblyVersion>1.2.2.0</AssemblyVersion>
+    <FileVersion>1.2.2.0</FileVersion>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CodeAnalysisRuleSet>Umamimolecule.AzureFunctionsMiddleware.ruleset</CodeAnalysisRuleSet>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
