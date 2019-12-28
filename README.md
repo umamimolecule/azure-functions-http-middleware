@@ -214,8 +214,8 @@ public class UtcRequestDateMiddleWare : HttpMiddleware
 You can add condition branching of a pipeline by using the `UseWhen` extension method:
 
 ```
-// If Function1 is called, then use MiddlewareA which returns response header "x-middleware-a"
-// If Function2 is called, then use MiddlewareB which returns response header "x-middleware-b"
+// If Function1 is called, then use MiddlewareA
+// If Function2 is called, then use MiddlewareB
 return pipeline.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function1"),
                         p => p.Use(middlewareA))
                .UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function2"),
