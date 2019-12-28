@@ -1,5 +1,12 @@
 # Changelog
 
+<a name="1.3.0" />
+
+## [1.3.0] - 2019-12-28
+
+### Added
+ - Add pipeline branching and conditional middleware via `MapWhen` and `UseWhen`.
+
 <a name="1.2.2" />
 
 ## [1.2.2] - 2019-12-26
