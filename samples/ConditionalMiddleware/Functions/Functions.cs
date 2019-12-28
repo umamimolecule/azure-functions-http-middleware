@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Umamimolecule.AzureFunctionsMiddleware;
-using Samples.ConditionalBranching.Pipelines;
+using Samples.ConditionalMiddleware.Pipelines;
 
-namespace Samples.ConditionalBranching.Functions
+namespace Samples.ConditionalMiddleware.Functions
 {
     /// <summary>
-    /// An HTTP-triggered Azure Function to demonstrate conditional branching.
+    /// An HTTP-triggered Azure Function to demonstrate conditional middleware.
     /// </summary>
     public class Functions
     {

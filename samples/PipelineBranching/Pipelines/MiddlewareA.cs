@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Umamimolecule.AzureFunctionsMiddleware;
 
-namespace Samples.ConditionalBranching.Pipelines
+namespace Samples.PipelineBranching.Pipelines
 {
-    public class MiddlewareB : HttpMiddleware
+    public class MiddlewareA : HttpMiddleware
     {
         public override Task InvokeAsync(HttpContext context)
         {
-            context.Response.Headers["x-middleware-b"] = "Hello from middleware B";
+            context.Response.Headers["x-middleware-a"] = "Hello from middleware A";
             return Task.CompletedTask;
         }
     }

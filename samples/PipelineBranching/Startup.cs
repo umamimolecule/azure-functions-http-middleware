@@ -1,10 +1,10 @@
 ﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Samples.ConditionalBranching.Pipelines;
+using Samples.PipelineBranching.Pipelines;
 
-[assembly: FunctionsStartup(typeof(Samples.ConditionalBranching.Startup))]
+[assembly: FunctionsStartup(typeof(Samples.PipelineBranching.Startup))]
 
-namespace Samples.ConditionalBranching
+namespace Samples.PipelineBranching
 {
     public class Startup : FunctionsStartup
     {

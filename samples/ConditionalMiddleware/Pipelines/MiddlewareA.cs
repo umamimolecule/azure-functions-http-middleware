@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Umamimolecule.AzureFunctionsMiddleware;
 
-namespace Samples.ConditionalBranching.Pipelines
+namespace Samples.ConditionalMiddleware.Pipelines
 {
     public class MiddlewareA : HttpMiddleware
     {

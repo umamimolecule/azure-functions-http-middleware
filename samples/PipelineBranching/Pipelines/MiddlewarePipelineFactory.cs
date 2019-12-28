@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Umamimolecule.AzureFunctionsMiddleware;
 
-namespace Samples.ConditionalBranching.Pipelines
+namespace Samples.PipelineBranching.Pipelines
 {
     /// <summary>
     /// A component to creates middleware pipeline instances used by this project.
@@ -41,12 +41,11 @@ namespace Samples.ConditionalBranching.Pipelines
         {
             MiddlewarePipeline pipeline = new MiddlewarePipeline(this.httpContextAccessor);
 
-            // If Function1 is called, then use MiddlewareA which returns response header "x-middleware-a"
-            // If Function2 is called, then use MiddlewareB which returns response header "x-middleware-b"
-            return pipeline.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function1"),
-                                    p => p.Use(middlewareA))
-                           .UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function2"),
-                                    p => p.Use(middlewareB))
+            // If Function1 is called, then use MiddlewareA, else use MiddlewareB
+            return pipeline.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function1"),
+                                    p => p.Use(middlewareA)
+                                          .Use(func))
+                           .Use(middlewareB)
                            .Use(func);
         }
     }

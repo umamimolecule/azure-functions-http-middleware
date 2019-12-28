@@ -1,8 +1,8 @@
-﻿# Sample: Conditional branching
+﻿# Sample: Conditional middleware
 
 This example project shows how to conditionally use middleware using the `UseWhen` extension method for a pipeline.
 
-## ConditionalBranching
+## ConditionalMiddleware
 
 This project contains two functions: `http://localhost:7071/api/Function1` and `http://localhost:7071/api/Function2`.
 

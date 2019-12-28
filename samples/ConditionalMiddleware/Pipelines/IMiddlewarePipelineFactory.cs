@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Umamimolecule.AzureFunctionsMiddleware;
 
-namespace Samples.ConditionalBranching.Pipelines
+namespace Samples.ConditionalMiddleware.Pipelines
 {
     /// <summary>
     /// Represents a component to creates middleware pipeline instances used by this project.
