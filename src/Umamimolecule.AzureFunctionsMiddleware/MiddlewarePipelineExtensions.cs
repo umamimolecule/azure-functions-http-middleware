@@ -88,5 +88,21 @@ namespace Umamimolecule.AzureFunctionsMiddleware
 
             return pipeline.Use(middleware);
         }
+
+        /// <summary>
+        /// Conditionally creates a branch in the request pipeline that is rejoined to the main pipeline.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="condition">The function which is invoked to determine if the branch should be taken.</param>
+        /// <param name="configure">Configures the branch.</param>
+        /// <returns>The pipeline instance.</returns>
+        public static IMiddlewarePipeline UseWhen(
+            this IMiddlewarePipeline pipeline,
+            Func<HttpContext, bool> condition,
+            Action<IMiddlewarePipeline> configure)
+        {
+            var middleware = new ConditionalMiddleware(pipeline, condition, configure);
+            return pipeline.Use(middleware);
+        }
     }
 }

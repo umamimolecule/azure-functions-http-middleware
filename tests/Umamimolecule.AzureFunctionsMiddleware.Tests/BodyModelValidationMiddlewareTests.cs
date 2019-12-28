@@ -72,7 +72,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
                 Id = null,
                 Child = new Child()
                 {
-                    Id = "2",
+                    Id = id,
                     Name = "Fred"
                 }
             };

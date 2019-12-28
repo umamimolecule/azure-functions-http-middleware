@@ -20,5 +20,11 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         /// <returns>The value to returned from the Azure function.</returns>
         Task<IActionResult> RunAsync();
+
+        /// <summary>
+        /// Creates a new pipeline with the same configuration as the current instance.
+        /// </summary>
+        /// <returns>The new pipeline.</returns>
+        IMiddlewarePipeline New();
     }
 }
