@@ -4,9 +4,33 @@
 
 An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.
 
-## NuGet Package
+### Table of contents
+ - [NuGet package](#nugetpackage)  
+ - [Introduction](#introduction)  
+ - [Motivation](#motivation)  
+ - [Dependencies](#dependencies)  
+ - [Getting started](#gettingstarted)  
+ - [Samples](#samples)  
+ - [Built-in middleware](#builtinmiddleware)  
+ - [Creating your own middleware](#creatingyourownmiddleware)  
+ - [Conditional branching](#conditionalbranching)  
+
+[#introduction](introduction)  
+[#motivation](Motivation)  
+[#dependencies](Dependencies)  
+[#gettingstarted](Getting Started)  
+[#creatingyourownmiddleware](Creating your own middleware)  
+[#conditionalbranching](Condition Branching)  
+
+---
+
+<a name="nugetpackage" />
+
+## NuGet package
 
 https://www.nuget.org/packages/Umamimolecule.AzureFunctionsMiddleware/
+
+<a name="introduction" />
 
 ## Introduction
 
@@ -84,15 +108,21 @@ namespace MyFunctionApp
 }
 ```
 
+<a name="motivation" />
+
 ## Motivation
 
 After having written several HTTP-triggered Azure Functions and writing the same cross-cutting concerns over and over for model validation, error handling, correlation IDs and such, it seemed appropriate to bundle all this into a package that can be re-used.
 
 This project was inspired by [this blog post](https://dasith.me/2018/01/20/using-azure-functions-httptrigger-as-web-api/) by Dasith Wijesiriwardena.
 
+<a name="dependencies" />
+
 ## Dependencies
 - Azure Functions 1.0.29
 - .Net Standard 2.0
+
+<a name="gettingstarted" />
 
 ## Getting Started
 
@@ -141,9 +171,14 @@ namespace Example
         // Your function logic goes here...
     }
 ```
+
+<a name="samples" />
+
 ## Samples
 
 See the [Samples](https://github.com/umamimolecule/azure-functions-http-middleware/tree/master/samples) folder for some example use-cases.
+
+<a name="builtinmiddleware" />
 
 ## Built-in middleware
 This package comes with the following built-in middleware:
@@ -166,6 +201,8 @@ Validates the query model for the request.  If successful, the query object will
 ### RequestDelegateMiddleware
 A general-purpose middleware for `RequestDelegate` instances.
 
+<a name="creatingyourownmiddleware" />
+
 ## Creating your own middleware
 You can implement `IHttpMiddleware` or sub-class the `HttpMiddleware` abstract class. Here's an example of some middleware to add a response header `x-request-date-utc` which contains the current UTC date and time of the request:
 ```
@@ -177,3 +214,20 @@ public class UtcRequestDateMiddleWare : HttpMiddleware
     }
 }
 ```
+
+<a name="conditionalbranching" />
+
+## Conditional branching
+You can add condition branching of a pipeline by using the `UseWhen` extension method:
+
+```
+// If Function1 is called, then use MiddlewareA which returns response header "x-middleware-a"
+// If Function2 is called, then use MiddlewareB which returns response header "x-middleware-b"
+return pipeline.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function1"),
+                        p => p.Use(middlewareA))
+               .UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function2"),
+                        p => p.Use(middlewareB))
+               .Use(func);
+```
+The first parameter for `UseWhen` is a predicate which returns true or false to indicate whether the branch should be run.
+The second parameter for `UseWhen` is a function which take in the new pipeline branch, where you can add the middleware that should be run when the predicate returns true.
