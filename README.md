@@ -18,7 +18,7 @@ Save yourself having to write the same cross-cutting concerns over and over for 
  - [Samples](#samples)  
  - [Built-in middleware](#builtinmiddleware)  
  - [Creating your own middleware](#creatingyourownmiddleware)  
- - [Middleware branching](#middlewarebranching)  
+ - [Pipeline branching](#pipelinebranching)  
  - [Conditional middleware](#conditionalmiddleware)  
 
 ---
@@ -212,10 +212,10 @@ public class UtcRequestDateMiddleWare : HttpMiddleware
 }
 ```
 
-<a name="middlewarebranching" />
+<a name="pipelinebranching" />
 
-## Middleware branching
-You can add conditional branching of a pipeline by using the `MapWhen` extension method:
+## Pipeline branching
+You can add branching of a pipeline by using the `MapWhen` extension method:
 
 ```
 // If Function1 is called, use MiddlewareA otherwise use MiddlewareB
