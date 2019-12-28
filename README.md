@@ -1,13 +1,18 @@
-![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/umamimolecule/azure-functions-http-middleware/14/master) ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/umamimolecule/azure-functions-http-middleware/14/master) ![Nuget](https://img.shields.io/nuget/v/Umamimolecule.AzureFunctionsMiddleware)
-
 # azure-functions-http-middleware
 
+![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/umamimolecule/azure-functions-http-middleware/14/master) ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/umamimolecule/azure-functions-http-middleware/14/master) ![Nuget](https://img.shields.io/nuget/v/Umamimolecule.AzureFunctionsMiddleware) [![](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
+
 An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/umamimolecule/azure-functions-http-middleware/master/assets/logo.png">
+</p>
+
+Save yourself having to write the same cross-cutting concerns over and over for model validation, error handling, correlation IDs and such. This project was inspired by [this blog post](https://dasith.me/2018/01/20/using-azure-functions-httptrigger-as-web-api/) by Dasith Wijesiriwardena.
 
 ### Table of contents
  - [NuGet package](#nugetpackage)  
  - [Introduction](#introduction)  
- - [Motivation](#motivation)  
  - [Dependencies](#dependencies)  
  - [Getting started](#gettingstarted)  
  - [Samples](#samples)  
@@ -104,14 +109,6 @@ namespace MyFunctionApp
 
 <a name="motivation" />
 
-## Motivation
-
-After having written several HTTP-triggered Azure Functions and writing the same cross-cutting concerns over and over for model validation, error handling, correlation IDs and such, it seemed appropriate to bundle all this into a package that can be re-used.
-
-This project was inspired by [this blog post](https://dasith.me/2018/01/20/using-azure-functions-httptrigger-as-web-api/) by Dasith Wijesiriwardena.
-
-<a name="dependencies" />
-
 ## Dependencies
 - Azure Functions 1.0.29
 - .Net Standard 2.0
@@ -177,23 +174,29 @@ See the [Samples](https://github.com/umamimolecule/azure-functions-http-middlewa
 ## Built-in middleware
 This package comes with the following built-in middleware:
 
-### BodyModelValidationMiddleware
-Validates the body model for the request.  If successful, the body will be available in `HttpContext.Items["Body"]`.
+- **BodyModelValidationMiddleware**
 
-### CorrelationIdMiddleware
-Extracts a correlation ID from the request headers and sets the value to `HttpContext.TraceIdentifier`.  You can specify a collection of correlation ID header names and the first matching header will be used.  If no matching headers are found, a unique GUID will be used.
+  Validates the body model for the request.  If successful, the body will be available in `HttpContext.Items["Body"]`.
 
-### ExceptionHandlerMiddleware
-Allows exceptions to be handled and a custom response to be returned.
+- **CorrelationIdMiddleware**
 
-### FunctionMiddleware
-Intended for your Azure Function implementation.
+  Extracts a correlation ID from the request headers and sets the value to `HttpContext.TraceIdentifier`.  You can specify a collection of correlation ID header names and the first matching header will be used.  If no matching headers are found, a unique GUID will be used.
 
-### QueryModelValidationMiddleware
-Validates the query model for the request.  If successful, the query object will be available in `HttpContext.Items["Query"]`.
+- **ExceptionHandlerMiddleware**
 
-### RequestDelegateMiddleware
-A general-purpose middleware for `RequestDelegate` instances.
+  Allows exceptions to be handled and a custom response to be returned.
+
+- **FunctionMiddleware**
+
+  Intended for your Azure Function implementation.
+
+- **QueryModelValidationMiddleware**
+
+  Validates the query model for the request.  If successful, the query object will be available in `HttpContext.Items["Query"]`.
+
+- **RequestDelegateMiddleware**
+
+  A general-purpose middleware for `RequestDelegate` instances.
 
 <a name="creatingyourownmiddleware" />
 
