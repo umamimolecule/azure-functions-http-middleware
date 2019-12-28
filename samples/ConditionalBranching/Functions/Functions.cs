@@ -11,22 +11,17 @@ namespace Samples.ConditionalBranching.Functions
     /// <summary>
     /// An HTTP-triggered Azure Function to demonstrate conditional branching.
     /// </summary>
-    public class Function
+    public class Functions
     {
-        private readonly IMiddlewarePipeline pipeline;
+        private readonly IMiddlewarePipelineFactory pipelineFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BodyValidation"/> class.
+        /// Initializes a new instance of the <see cref="Functions"/> class.
         /// </summary>
         /// <param name="pipelineFactory">The middleware pipeline factory.</param>
-        public Function(IMiddlewarePipelineFactory pipelineFactory)
+        public Functions(IMiddlewarePipelineFactory pipelineFactory)
         {
-            // Note: You could simply new-up a MiddlewarePipeline instance here and build it,
-            // but this example uses a pipeline factory so you can share pipelines between
-            // Azure Functions that have common requirements, without having to duplicate
-            // code.
-
-            this.pipeline = pipelineFactory.Create(this.ExecuteAsync);
+            this.pipelineFactory = pipelineFactory;
         }
 
         /// <summary>
@@ -38,7 +33,8 @@ namespace Samples.ConditionalBranching.Functions
         public async Task<IActionResult> Function1(
             [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
-            return await this.pipeline.RunAsync();
+            var pipeline = this.pipelineFactory.Create(this.ExecuteFunction1Async);
+            return await pipeline.RunAsync();
         }
 
         /// <summary>
@@ -50,22 +46,41 @@ namespace Samples.ConditionalBranching.Functions
         public async Task<IActionResult> Function2(
             [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
-            return await this.pipeline.RunAsync();
+            var pipeline = this.pipelineFactory.Create(this.ExecuteFunction2Async);
+            return await pipeline.RunAsync();
         }
 
         /// <summary>
-        /// Executes the function's business logic.  At this point, the body model
-        /// has been validated correctly.
+        /// Executes the function 1's business logic.
         /// </summary>
         /// <param name="context">The HTTP context for the request.</param>
         /// <returns>The <see cref="IActionResult"/> result.</returns>
-        private async Task<IActionResult> ExecuteAsync(HttpContext context)
+        private async Task<IActionResult> ExecuteFunction1Async(HttpContext context)
         {
             await Task.CompletedTask;
 
             dynamic payload = new
             {
-                message = "OK"
+                message = "OK",
+                functionName = "Function1"
+            };
+
+            return new OkObjectResult(payload);
+        }
+
+        /// <summary>
+        /// Executes the function 2's business logic.
+        /// </summary>
+        /// <param name="context">The HTTP context for the request.</param>
+        /// <returns>The <see cref="IActionResult"/> result.</returns>
+        private async Task<IActionResult> ExecuteFunction2Async(HttpContext context)
+        {
+            await Task.CompletedTask;
+
+            dynamic payload = new
+            {
+                message = "OK",
+                functionName = "Function2"
             };
 
             return new OkObjectResult(payload);
