@@ -1,13 +1,18 @@
-![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/umamimolecule/azure-functions-http-middleware/14/master) ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/umamimolecule/azure-functions-http-middleware/14/master) ![Nuget](https://img.shields.io/nuget/v/Umamimolecule.AzureFunctionsMiddleware)
+![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/umamimolecule/azure-functions-http-middleware/14/master) ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/umamimolecule/azure-functions-http-middleware/14/master) ![Nuget](https://img.shields.io/nuget/v/Umamimolecule.AzureFunctionsMiddleware) [![](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
 
 # azure-functions-http-middleware
 
 An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/umamimolecule/azure-functions-http-middleware/master/assets/logo.png">
+</p>
+
+Save yourself having to write the same cross-cutting concerns over and over for model validation, error handling, correlation IDs and such. This project was inspired by [this blog post](https://dasith.me/2018/01/20/using-azure-functions-httptrigger-as-web-api/) by Dasith Wijesiriwardena.
+
 ### Table of contents
  - [NuGet package](#nugetpackage)  
  - [Introduction](#introduction)  
- - [Motivation](#motivation)  
  - [Dependencies](#dependencies)  
  - [Getting started](#gettingstarted)  
  - [Samples](#samples)  
@@ -103,14 +108,6 @@ namespace MyFunctionApp
 ```
 
 <a name="motivation" />
-
-## Motivation
-
-After having written several HTTP-triggered Azure Functions and writing the same cross-cutting concerns over and over for model validation, error handling, correlation IDs and such, it seemed appropriate to bundle all this into a package that can be re-used.
-
-This project was inspired by [this blog post](https://dasith.me/2018/01/20/using-azure-functions-httptrigger-as-web-api/) by Dasith Wijesiriwardena.
-
-<a name="dependencies" />
 
 ## Dependencies
 - Azure Functions 1.0.29
