@@ -13,7 +13,8 @@ An extensible middleware implementation for HTTP-triggered Azure Functions in .N
  - [Samples](#samples)  
  - [Built-in middleware](#builtinmiddleware)  
  - [Creating your own middleware](#creatingyourownmiddleware)  
- - [Conditional branching](#conditionalbranching)  
+ - [Middleware branching](#middlewarebranching)  
+ - [Conditional middleware](#conditionalmiddleware)  
 
 ---
 
@@ -208,19 +209,36 @@ public class UtcRequestDateMiddleWare : HttpMiddleware
 }
 ```
 
-<a name="conditionalbranching" />
+<a name="middlewarebranching" />
 
-## Conditional branching
-You can add condition branching of a pipeline by using the `UseWhen` extension method:
+## Middleware branching
+You can add conditional branching of a pipeline by using the `MapWhen` extension method:
 
 ```
-// If Function1 is called, then use MiddlewareA
-// If Function2 is called, then use MiddlewareB
-return pipeline.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function1"),
-                        p => p.Use(middlewareA))
-               .UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function2"),
-                        p => p.Use(middlewareB))
-               .Use(func);
+// If Function1 is called, use MiddlewareA otherwise use MiddlewareB
+pipeline.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function1"),
+                 p => p.Use(middlewareA)
+                       .Use(func))
+        .Use(middlewareB)
+        .Use(func);
 ```
+ 
+This splits the middleware pipeline into two completely separate branches by specifying a predicate.  In this example, either middlewareA or middlewareB will be applied, but not both.
+
 The first parameter for `UseWhen` is a predicate which returns true or false to indicate whether the branch should be run.
 The second parameter for `UseWhen` is a function which take in the new pipeline branch, where you can add the middleware that should be run when the predicate returns true.
+
+<a name="conditionalmiddleware" />
+
+## Conditional middleware
+You can add conditional middleware by using the `UseWhen` extension method:
+
+```
+// If Function1 is called, use MiddlewareA
+pipeline.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function1"),
+                 p => p.Use(middlewareA));
+        .Use(middlewareB)
+        .Use(func);
+```
+
+This is similar to `MapWhen` but the difference is the main pipeline is rejoined after the branch, so in this example both middlewareA and middlewareB are run for Function1.

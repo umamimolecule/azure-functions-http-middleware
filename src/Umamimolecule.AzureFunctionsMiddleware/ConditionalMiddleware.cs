@@ -12,6 +12,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         private readonly IMiddlewarePipeline pipeline;
         private readonly Action<IMiddlewarePipeline> configure;
         private readonly Func<HttpContext, bool> condition;
+        private readonly bool rejoinPipeline;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConditionalMiddleware"/> class.
@@ -19,14 +20,17 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <param name="pipeline">The pipeline.</param>
         /// <param name="condition">The condition to evaluate.</param>
         /// <param name="configure">Configures the branch.</param>
+        /// <param name="rejoinPipeline">Determines if the branch should rejoin the main pipeline or not.</param>
         public ConditionalMiddleware(
             IMiddlewarePipeline pipeline,
             Func<HttpContext, bool> condition,
-            Action<IMiddlewarePipeline> configure)
+            Action<IMiddlewarePipeline> configure,
+            bool rejoinPipeline)
         {
             this.pipeline = pipeline;
             this.configure = configure;
             this.condition = condition;
+            this.rejoinPipeline = rejoinPipeline;
         }
 
         /// <summary>
@@ -42,6 +46,11 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                 var branch = this.pipeline.New();
                 this.configure(branch);
                 await branch.RunAsync();
+
+                if (!this.rejoinPipeline)
+                {
+                    return;
+                }
             }
 
             if (this.Next != null)

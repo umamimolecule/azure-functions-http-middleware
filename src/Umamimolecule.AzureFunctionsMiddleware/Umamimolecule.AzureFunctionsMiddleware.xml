@@ -38,13 +38,14 @@
             Middleware to conditionally execute a branch.
             </summary>
         </member>
-        <member name="M:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware.#ctor(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Boolean},System.Action{Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline})">
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware.#ctor(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Boolean},System.Action{Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline},System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware"/> class.
             </summary>
             <param name="pipeline">The pipeline.</param>
             <param name="condition">The condition to evaluate.</param>
             <param name="configure">Configures the branch.</param>
+            <param name="rejoinPipeline">Determines if the branch should rejoin the main pipeline or not.</param>
         </member>
         <member name="M:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
             <summary>
@@ -394,6 +395,15 @@
         <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseWhen(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Boolean},System.Action{Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline})">
             <summary>
             Conditionally creates a branch in the request pipeline that is rejoined to the main pipeline.
+            </summary>
+            <param name="pipeline">The pipeline.</param>
+            <param name="condition">The function which is invoked to determine if the branch should be taken.</param>
+            <param name="configure">Configures the branch.</param>
+            <returns>The pipeline instance.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.MapWhen(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Boolean},System.Action{Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline})">
+            <summary>
+            Conditionally creates a branch in the request pipeline.
             </summary>
             <param name="pipeline">The pipeline.</param>
             <param name="condition">The function which is invoked to determine if the branch should be taken.</param>

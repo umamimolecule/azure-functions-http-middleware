@@ -101,7 +101,23 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             Func<HttpContext, bool> condition,
             Action<IMiddlewarePipeline> configure)
         {
-            var middleware = new ConditionalMiddleware(pipeline, condition, configure);
+            var middleware = new ConditionalMiddleware(pipeline, condition, configure, true);
+            return pipeline.Use(middleware);
+        }
+
+        /// <summary>
+        /// Conditionally creates a branch in the request pipeline.
+        /// </summary>
+        /// <param name="pipeline">The pipeline.</param>
+        /// <param name="condition">The function which is invoked to determine if the branch should be taken.</param>
+        /// <param name="configure">Configures the branch.</param>
+        /// <returns>The pipeline instance.</returns>
+        public static IMiddlewarePipeline MapWhen(
+            this IMiddlewarePipeline pipeline,
+            Func<HttpContext, bool> condition,
+            Action<IMiddlewarePipeline> configure)
+        {
+            var middleware = new ConditionalMiddleware(pipeline, condition, configure, false);
             return pipeline.Use(middleware);
         }
     }

@@ -134,13 +134,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             var instance = this.CreateInstance();
             DummyLogger logger = new DummyLogger();
             instance.UseWhen(ctx => true,
-                             p => p.Use(new LogMiddleware(logger, "a")));
-            instance.Use(new LogMiddleware(logger, "b"));
+                             p => p.Use(new LogMiddleware(logger, "a1"))
+                                   .Use(new LogMiddleware(logger, "a2")));
+            instance.Use(new LogMiddleware(logger, "b1"))
+                    .Use(new LogMiddleware(logger, "b2"));
 
             var result = await instance.RunAsync();
-            logger.Data.Count.ShouldBe(2);
-            logger.Data[0].ShouldBe("a");
-            logger.Data[1].ShouldBe("b");
+            logger.Data.Count.ShouldBe(4);
+            logger.Data.ToArray().ShouldBe(new string[] { "a1", "a2", "b1", "b2" });
         }
 
         [Fact(DisplayName = "UseWhen should not execute the branch when the predicate returns false")]
@@ -149,12 +150,46 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             var instance = this.CreateInstance();
             DummyLogger logger = new DummyLogger();
             instance.UseWhen(ctx => false,
-                             p => p.Use(new LogMiddleware(logger, "a")));
-            instance.Use(new LogMiddleware(logger, "b"));
+                             p => p.Use(new LogMiddleware(logger, "a1"))
+                                   .Use(new LogMiddleware(logger, "a2")));
+            instance.Use(new LogMiddleware(logger, "b1"))
+                    .Use(new LogMiddleware(logger, "b2"));
 
             var result = await instance.RunAsync();
-            logger.Data.Count.ShouldBe(1);
-            logger.Data[0].ShouldBe("b");
+            logger.Data.Count.ShouldBe(2);
+            logger.Data.ToArray().ShouldBe(new string[] { "b1", "b2" });
+        }
+
+        [Fact(DisplayName = "MapWhen should execute the branch when the predicate returns true")]
+        public async Task MapWhen_ConditionTrue()
+        {
+            var instance = this.CreateInstance();
+            DummyLogger logger = new DummyLogger();
+            instance.MapWhen(ctx => true,
+                             p => p.Use(new LogMiddleware(logger, "a1"))
+                                   .Use(new LogMiddleware(logger, "a2")));
+            instance.Use(new LogMiddleware(logger, "b1"))
+                    .Use(new LogMiddleware(logger, "b2"));
+
+            var result = await instance.RunAsync();
+            logger.Data.Count.ShouldBe(2);
+            logger.Data.ToArray().ShouldBe(new string[] { "a1", "a2" });
+        }
+
+        [Fact(DisplayName = "MapWhen should not execute the branch when the predicate returns false")]
+        public async Task MapWhen_ConditionFalse()
+        {
+            var instance = this.CreateInstance();
+            DummyLogger logger = new DummyLogger();
+            instance.MapWhen(ctx => false,
+                             p => p.Use(new LogMiddleware(logger, "a1"))
+                                   .Use(new LogMiddleware(logger, "a2")));
+            instance.Use(new LogMiddleware(logger, "b1"))
+                    .Use(new LogMiddleware(logger, "b2"));
+
+            var result = await instance.RunAsync();
+            logger.Data.Count.ShouldBe(2);
+            logger.Data.ToArray().ShouldBe(new string[] { "b1", "b2" });
         }
 
         private MiddlewarePipeline CreateInstance()
@@ -188,10 +223,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
                 this.id = id;
             }
 
-            public override Task InvokeAsync(HttpContext context)
+            public override async Task InvokeAsync(HttpContext context)
             {
                 this.logger.Log(this.id);
-                return Task.CompletedTask;
+
+                if (this.Next != null)
+                {
+                    await this.Next.InvokeAsync(context);
+                }
             }
         }
     }
