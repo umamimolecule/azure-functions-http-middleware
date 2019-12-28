@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -115,9 +116,83 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             //content.ShouldBe("hello");
         }
 
+        [Fact(DisplayName = "New should create a new pipeline with the same properties as the original pipeline.")]
+        public void New()
+        {
+            var instance = this.CreateInstance();
+            var result = instance.New().ShouldBeOfType<MiddlewarePipeline>();
+
+            var httpContextAccessorField = typeof(MiddlewarePipeline).GetField("httpContextAccessor", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            var originalHttpContextAccessor = (IHttpContextAccessor)httpContextAccessorField.GetValue(instance);
+            var newHttpContextAccessor = (IHttpContextAccessor)httpContextAccessorField.GetValue(result);
+            originalHttpContextAccessor.ShouldBeSameAs(newHttpContextAccessor);
+        }
+
+        [Fact(DisplayName = "UseWhen should execute the branch when the predicate returns true")]
+        public async Task UseWhen_ConditionTrue()
+        {
+            var instance = this.CreateInstance();
+            DummyLogger logger = new DummyLogger();
+            instance.UseWhen(ctx => true,
+                             p => p.Use(new LogMiddleware(logger, "a")));
+            instance.Use(new LogMiddleware(logger, "b"));
+
+            var result = await instance.RunAsync();
+            logger.Data.Count.ShouldBe(2);
+            logger.Data[0].ShouldBe("a");
+            logger.Data[1].ShouldBe("b");
+        }
+
+        [Fact(DisplayName = "UseWhen should not execute the branch when the predicate returns false")]
+        public async Task UseWhen_ConditionFalse()
+        {
+            var instance = this.CreateInstance();
+            DummyLogger logger = new DummyLogger();
+            instance.UseWhen(ctx => false,
+                             p => p.Use(new LogMiddleware(logger, "a")));
+            instance.Use(new LogMiddleware(logger, "b"));
+
+            var result = await instance.RunAsync();
+            logger.Data.Count.ShouldBe(1);
+            logger.Data[0].ShouldBe("b");
+        }
+
         private MiddlewarePipeline CreateInstance()
         {
             return new MiddlewarePipeline(this.contextAccessor);
+        }
+
+        class DummyLogger
+        {
+            public DummyLogger()
+            {
+                this.Data = new List<string>();
+            }
+
+            public List<string> Data { get; private set; }
+
+            public void Log(string message)
+            {
+                this.Data.Add(message);
+            }
+        }
+
+        class LogMiddleware : HttpMiddleware
+        {
+            private readonly DummyLogger logger;
+            private readonly string id;
+
+            public LogMiddleware(DummyLogger logger, string id)
+            {
+                this.logger = logger;
+                this.id = id;
+            }
+
+            public override Task InvokeAsync(HttpContext context)
+            {
+                this.logger.Log(this.id);
+                return Task.CompletedTask;
+            }
         }
     }
 }

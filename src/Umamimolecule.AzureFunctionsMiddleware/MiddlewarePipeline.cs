@@ -59,5 +59,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware
 
             return new HttpResponseResult(context);
         }
+
+        /// <summary>
+        /// Creates a new pipeline with the same configuration as the current instance.
+        /// </summary>
+        /// <returns>The new pipeline.</returns>
+        public IMiddlewarePipeline New()
+        {
+            return new MiddlewarePipeline(this.httpContextAccessor);
+        }
     }
 }

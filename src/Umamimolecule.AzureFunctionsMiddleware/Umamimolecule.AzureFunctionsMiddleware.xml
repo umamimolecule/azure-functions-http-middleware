@@ -33,6 +33,26 @@
             <param name="context">The context.</param>
             <returns>The validation results.</returns>
         </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware">
+            <summary>
+            Middleware to conditionally execute a branch.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware.#ctor(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Boolean},System.Action{Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware"/> class.
+            </summary>
+            <param name="pipeline">The pipeline.</param>
+            <param name="condition">The condition to evaluate.</param>
+            <param name="configure">Configures the branch.</param>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Runs the middleware.
+            </summary>
+            <param name="context">The context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
         <member name="T:Umamimolecule.AzureFunctionsMiddleware.ContentTypes">
             <summary>
             Contains constants for known content types.
@@ -265,6 +285,12 @@
             </summary>
             <returns>The value to returned from the Azure function.</returns>
         </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline.New">
+            <summary>
+            Creates a new pipeline with the same configuration as the current instance.
+            </summary>
+            <returns>The new pipeline.</returns>
+        </member>
         <member name="T:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipeline">
             <summary>
             The middleware pipeline.
@@ -288,6 +314,12 @@
             Executes the pipeline.
             </summary>
             <returns>The value to returned from the Azure function.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipeline.New">
+            <summary>
+            Creates a new pipeline with the same configuration as the current instance.
+            </summary>
+            <returns>The new pipeline.</returns>
         </member>
         <member name="T:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineException">
             <summary>
@@ -357,6 +389,15 @@
             <param name="pipeline">The pipeline.</param>
             <param name="exceptionHandler">An optional handler to process exceptions.  Leave null to use the default exception handler.</param>
             <param name="loggerHandler">An optional handler to log exceptions.</param>
+            <returns>The pipeline instance.</returns>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseWhen(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{Microsoft.AspNetCore.Http.HttpContext,System.Boolean},System.Action{Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline})">
+            <summary>
+            Conditionally creates a branch in the request pipeline that is rejoined to the main pipeline.
+            </summary>
+            <param name="pipeline">The pipeline.</param>
+            <param name="condition">The function which is invoked to determine if the branch should be taken.</param>
+            <param name="configure">Configures the branch.</param>
             <returns>The pipeline instance.</returns>
         </member>
         <member name="T:Umamimolecule.AzureFunctionsMiddleware.QueryModelValidationMiddleware`1">
