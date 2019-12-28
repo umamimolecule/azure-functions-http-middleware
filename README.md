@@ -174,29 +174,23 @@ See the [Samples](https://github.com/umamimolecule/azure-functions-http-middlewa
 ## Built-in middleware
 This package comes with the following built-in middleware:
 
-- **BodyModelValidationMiddleware**
+**BodyModelValidationMiddleware**  
+Validates the body model for the request.  If successful, the body will be available in `HttpContext.Items["Body"]`.
 
-  Validates the body model for the request.  If successful, the body will be available in `HttpContext.Items["Body"]`.
+**CorrelationIdMiddleware**  
+Extracts a correlation ID from the request headers and sets the value to `HttpContext.TraceIdentifier`.  You can specify a collection of correlation ID header names and the first matching header will be used.  If no matching headers are found, a unique GUID will be used.
 
-- **CorrelationIdMiddleware**
+**ExceptionHandlerMiddleware**  
+Allows exceptions to be handled and a custom response to be returned.
 
-  Extracts a correlation ID from the request headers and sets the value to `HttpContext.TraceIdentifier`.  You can specify a collection of correlation ID header names and the first matching header will be used.  If no matching headers are found, a unique GUID will be used.
+**FunctionMiddleware**  
+Intended for your Azure Function implementation.
 
-- **ExceptionHandlerMiddleware**
+**QueryModelValidationMiddleware**  
+Validates the query model for the request.  If successful, the query object will be available in `HttpContext.Items["Query"]`.
 
-  Allows exceptions to be handled and a custom response to be returned.
-
-- **FunctionMiddleware**
-
-  Intended for your Azure Function implementation.
-
-- **QueryModelValidationMiddleware**
-
-  Validates the query model for the request.  If successful, the query object will be available in `HttpContext.Items["Query"]`.
-
-- **RequestDelegateMiddleware**
-
-  A general-purpose middleware for `RequestDelegate` instances.
+**RequestDelegateMiddleware**  
+A general-purpose middleware for `RequestDelegate` instances.
 
 <a name="creatingyourownmiddleware" />
 
