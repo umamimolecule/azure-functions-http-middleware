@@ -1,6 +1,6 @@
 ﻿# Sample: Pipeline branching
 
-This example project shows how to conditionally use middleware using the `UseWhen` extension method for a pipeline.
+This example project shows how to conditionally branch a pipeline using the `MapWhen` extension method for a pipeline.
 
 ## PipelineBranching
 
