@@ -225,8 +225,8 @@ pipeline.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/Function1"),
  
 This splits the middleware pipeline into two completely separate branches by specifying a predicate.  In this example, either middlewareA or middlewareB will be applied, but not both.
 
-The first parameter for `UseWhen` is a predicate which returns true or false to indicate whether the branch should be run.
-The second parameter for `UseWhen` is a function which take in the new pipeline branch, where you can add the middleware that should be run when the predicate returns true.
+ - The first parameter for `MapWhen` is a predicate which returns true or false to indicate whether the branch should be run.
+ - The second parameter is a function which take in the new pipeline branch, where you can add the middleware that should be run when the predicate returns true.
 
 <a name="conditionalmiddleware" />
 
