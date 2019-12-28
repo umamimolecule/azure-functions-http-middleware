@@ -15,13 +15,6 @@ An extensible middleware implementation for HTTP-triggered Azure Functions in .N
  - [Creating your own middleware](#creatingyourownmiddleware)  
  - [Conditional branching](#conditionalbranching)  
 
-[#introduction](introduction)  
-[#motivation](Motivation)  
-[#dependencies](Dependencies)  
-[#gettingstarted](Getting Started)  
-[#creatingyourownmiddleware](Creating your own middleware)  
-[#conditionalbranching](Condition Branching)  
-
 ---
 
 <a name="nugetpackage" />
