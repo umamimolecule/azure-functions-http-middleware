@@ -1,6 +1,6 @@
-![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/umamimolecule/azure-functions-http-middleware/14/master) ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/umamimolecule/azure-functions-http-middleware/14/master) ![Nuget](https://img.shields.io/nuget/v/Umamimolecule.AzureFunctionsMiddleware) [![](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
-
 # azure-functions-http-middleware
+
+![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/umamimolecule/azure-functions-http-middleware/14/master) ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/umamimolecule/azure-functions-http-middleware/14/master) ![Nuget](https://img.shields.io/nuget/v/Umamimolecule.AzureFunctionsMiddleware) [![](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
 
 An extensible middleware implementation for HTTP-triggered Azure Functions in .Net.
 
