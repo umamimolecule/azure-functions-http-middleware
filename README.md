@@ -33,7 +33,15 @@ https://www.nuget.org/packages/Umamimolecule.AzureFunctionsMiddleware/
 
 ## Introduction
 
-It lets you do stuff like this in your function:
+At the moment, there isn't a built-in mechanism of defining middleware for Net Azure Functions.  So this project aims to provide a similar middleware functionality that you would find in ASP .Net Core.
+
+From Microsoft's documentation:
+
+> Middleware is software that's assembled into an app pipeline to handle requests and responses. Each component:
+> - Chooses whether to pass the request to the next component in the pipeline.
+> - Can perform work before and after the next component in the pipeline.
+
+As an example, we could add middleware to a HTTP-triggered Azure Function to extract a correlation ID from the request headers, validate the query parameters and then validate body parameters for a request like this:
 
 ```
 using System.Threading.Tasks;
