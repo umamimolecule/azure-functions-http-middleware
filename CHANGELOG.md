@@ -1,5 +1,12 @@
 # Changelog
 
+<a name="2.0.0" />
+
+## [2.0.0] - 2020-12-12
+
+### Changed
+ - Updated reference to latest version of Azure Functions SDK
+
 <a name="1.3.0" />
 
 ## [1.3.0] - 2019-12-28
