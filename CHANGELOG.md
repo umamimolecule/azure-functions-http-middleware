@@ -5,7 +5,7 @@
 ## [2.0.0] - 2020-12-12
 
 ### Changed
- - Updated reference to latest version of Azure Functions SDK
+ - Updated references to Azure Functions SDK version 3.0.11 and .Net Core 3.1
 
 <a name="1.3.0" />
 
