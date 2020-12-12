@@ -118,8 +118,8 @@ namespace MyFunctionApp
 <a name="motivation" />
 
 ## Dependencies
-- Azure Functions 1.0.29
-- .Net Standard 2.0
+- Azure Functions SDK 3.0.11
+- .Net Core 3.1
 
 <a name="gettingstarted" />
 
