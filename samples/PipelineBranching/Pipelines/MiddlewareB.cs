@@ -6,10 +6,14 @@ namespace Samples.PipelineBranching.Pipelines
 {
     public class MiddlewareB : HttpMiddleware
     {
-        public override Task InvokeAsync(HttpContext context)
+        public override async Task InvokeAsync(HttpContext context)
         {
             context.Response.Headers["x-middleware-b"] = "Hello from middleware B";
-            return Task.CompletedTask;
+
+            if (this.Next != null)
+            {
+                await this.Next.InvokeAsync(context);
+            }
         }
     }
 }
