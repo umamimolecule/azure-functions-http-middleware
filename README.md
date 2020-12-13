@@ -88,7 +88,7 @@ namespace MyFunctionApp
             
             await Task.CompletedTask;
 
-            dynamic payload = new
+            var payload = new
             {
                 correlationId = context.TraceIdentifier,
                 body = context.Items[ContextItems.Body],

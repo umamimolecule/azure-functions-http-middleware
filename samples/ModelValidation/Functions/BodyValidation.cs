@@ -52,7 +52,7 @@ namespace Samples.ModelValidation.Functions
         {
             await Task.CompletedTask;
 
-            dynamic payload = new
+            var payload = new
             {
                 correlationId = context.TraceIdentifier,
                 message = "OK",
