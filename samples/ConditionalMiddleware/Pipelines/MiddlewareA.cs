@@ -6,10 +6,14 @@ namespace Samples.ConditionalMiddleware.Pipelines
 {
     public class MiddlewareA : HttpMiddleware
     {
-        public override Task InvokeAsync(HttpContext context)
+        public override async Task InvokeAsync(HttpContext context)
         {
             context.Response.Headers["x-middleware-a"] = "Hello from middleware A";
-            return Task.CompletedTask;
+
+            if (this.Next != null)
+            {
+                await this.Next.InvokeAsync(context);
+            }
         }
     }
 }
