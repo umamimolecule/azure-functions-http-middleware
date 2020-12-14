@@ -99,7 +99,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             var instance = this.CreateInstance();
             var middleware = new FunctionMiddleware((HttpContext context) =>
             {
-                dynamic obj = new
+                var obj = new
                 {
                     message = "hello"
                 };

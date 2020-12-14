@@ -36,7 +36,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             }
             else
             {
-                dynamic response = new
+                var response = new
                 {
                     correlationId = context.TraceIdentifier,
                     error = new

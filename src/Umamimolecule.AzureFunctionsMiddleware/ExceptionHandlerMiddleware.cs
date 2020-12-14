@@ -26,7 +26,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
 
                     if (exception is BadRequestException)
                     {
-                        dynamic response = new
+                        var response = new
                         {
                             correlationId = context.TraceIdentifier,
                             error = new
@@ -40,7 +40,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                     }
                     else
                     {
-                        dynamic response = new
+                        var response = new
                         {
                             correlationId = context.TraceIdentifier,
                             error = new
@@ -98,7 +98,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
                 {
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     context.Response.ContentType = ContentTypes.ApplicationJson;
-                    dynamic content = new
+                    var content = new
                     {
                         error = new
                         {

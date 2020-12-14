@@ -58,7 +58,7 @@ namespace Samples.ConditionalMiddleware.Functions
         {
             await Task.CompletedTask;
 
-            dynamic payload = new
+            var payload = new
             {
                 message = "OK",
                 functionName = "Function1"
@@ -76,7 +76,7 @@ namespace Samples.ConditionalMiddleware.Functions
         {
             await Task.CompletedTask;
 
-            dynamic payload = new
+            var payload = new
             {
                 message = "OK",
                 functionName = "Function2"

@@ -20,7 +20,7 @@ namespace Samples.ModelValidation.Pipelines
                     return new StatusCodeResult(429);
 
                 default:
-                    dynamic body = new
+                    var body = new
                     {
                         correlationId = context.TraceIdentifier,
                         error = new
