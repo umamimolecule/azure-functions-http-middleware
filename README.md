@@ -224,7 +224,7 @@ namespace Example
     }
 }</code></pre>
 
-3. In your HTTP trigger function, execute your pipeline:
+4. In your HTTP trigger function, execute your pipeline:
 
 **MyFunction.cs**
 <pre><code>using Microsoft.Azure.WebJobs.Extensions.Http;
