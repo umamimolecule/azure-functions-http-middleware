@@ -201,7 +201,7 @@ namespace Example
     {
         private readonly IMiddlewarePipeline pipeline;
 
-<b>        public MyGetFunction(IHttpContextAccessor httpContextAccessor)
+<b>        public MyFunction(IHttpContextAccessor httpContextAccessor)
         {
             this.pipeline = new MiddlewarePipeline(httpContextAccessor);
             this.pipeline.UseCorrelationId(new string[] { "x-request-id" })
@@ -233,18 +233,18 @@ using Umamimolecule.AzureFunctionsMiddleware;
 
 namespace Example
 {
-    public class MyGetFunction
+    public class MyFunction
     {
         private readonly IMiddlewarePipeline pipeline;
 
-        public MyGetFunction(IHttpContextAccessor httpContextAccessor)
+        public MyFunction(IHttpContextAccessor httpContextAccessor)
         {
             this.pipeline = new MiddlewarePipeline(httpContextAccessor);
             this.pipeline.UseCorrelationId(new string[] { "x-request-id" })
                          .Use(this.ExecuteAsync);            
         }
 <b>
-        [FunctionName(nameof(MyGetFunction))]
+        [FunctionName(nameof(MyFunction))]
         public Task&lt;IActionResult&gt; Run(
             [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
@@ -269,18 +269,18 @@ using Umamimolecule.AzureFunctionsMiddleware;
 
 namespace Example
 {
-    public class MyGetFunction
+    public class MyFunction
     {
         private readonly IMiddlewarePipeline pipeline;
 
-        public MyGetFunction(IHttpContextAccessor httpContextAccessor)
+        public MyFunction(IHttpContextAccessor httpContextAccessor)
         {
             this.pipeline = new MiddlewarePipeline(httpContextAccessor);
             this.pipeline.UseCorrelationId(new string[] { "x-request-id" })
                          .Use(this.ExecuteAsync);            
         }
 
-        [FunctionName(nameof(MyGetFunction))]
+        [FunctionName(nameof(MyFunction))]
         public Task&lt;IActionResult&gt; Run(
             [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
