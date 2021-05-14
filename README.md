@@ -43,7 +43,7 @@ From Microsoft's documentation:
 
 As an example, we could add middleware to a HTTP-triggered Azure Function to extract a correlation ID from the request headers, validate the query parameters and then validate body parameters for a request like this:
 
-`Startup.cs`
+**Startup.cs**
 ```
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,7 +62,7 @@ namespace MyFunctionApp
 }
 ```
 
-`MyFunctionApp.cs`
+**MyFunctionApp.cs**
 ```
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -166,7 +166,7 @@ install-package Umamimolecule.AzureFunctionsMiddleware
 
 Register the HTTP context accessor service - this is needed by the pipeline to determine the current HTTP context.
 
-`Startup.cs`
+**Startup.cs**
 ```
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -190,7 +190,7 @@ namespace Example
 
 _Note: Middleware pipelines are configured within each Azure Function's constructor.  This is unlike ASP.Net Core where the pipelines are defined within the Startup class, and this is due to the way the Azure functions runtime works where it does not expose any_ `IApplicationBuilder` _type of bootstrapping._
 
-`MyFunction.cs`
+**MyFunction.cs**
 <pre><code>using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Umamimolecule.AzureFunctionsMiddleware;
@@ -226,7 +226,7 @@ namespace Example
 
 3. In your HTTP trigger function, execute your pipeline:
 
-`MyFunction.cs`
+**MyFunction.cs**
 <pre><code>using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Umamimolecule.AzureFunctionsMiddleware;
