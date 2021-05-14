@@ -49,11 +49,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         /// <typeparam name="T">The query model type.</typeparam>
         /// <param name="pipeline">The pipeline.</param>
+        /// <param name="handleValidationFailure">Optional handler to return a custom response when validation is unsuccessful.</param>
         /// <returns>The pipeline instance.</returns>
-        public static IMiddlewarePipeline UseQueryValidation<T>(this IMiddlewarePipeline pipeline)
+        public static IMiddlewarePipeline UseQueryValidation<T>(
+            this IMiddlewarePipeline pipeline,
+            Func<HttpContext, ModelValidationResult, IActionResult> handleValidationFailure = null)
             where T : new()
         {
-            return pipeline.Use(new QueryModelValidationMiddleware<T>());
+            return pipeline.Use(new QueryModelValidationMiddleware<T>() { HandleValidationFailure = handleValidationFailure });
         }
 
         /// <summary>
@@ -61,11 +64,14 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         /// <typeparam name="T">The body model type.</typeparam>
         /// <param name="pipeline">The pipeline.</param>
+        /// <param name="handleValidationFailure">Optional handler to return a custom response when validation is unsuccessful.</param>
         /// <returns>The pipeline instance.</returns>
-        public static IMiddlewarePipeline UseBodyValidation<T>(this IMiddlewarePipeline pipeline)
+        public static IMiddlewarePipeline UseBodyValidation<T>(
+            this IMiddlewarePipeline pipeline,
+            Func<HttpContext, ModelValidationResult, IActionResult> handleValidationFailure = null)
             where T : new()
         {
-            return pipeline.Use(new BodyModelValidationMiddleware<T>());
+            return pipeline.Use(new BodyModelValidationMiddleware<T>() { HandleValidationFailure = handleValidationFailure });
         }
 
         /// <summary>

@@ -26,24 +26,35 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The validation results.</returns>
-        protected override async Task<(bool Success, string Error, T Model)> ValidateAsync(HttpContext context)
+        protected override async Task<ModelValidationResult> ValidateAsync(HttpContext context)
         {
             (var model, var error) = await this.CreateModelAsync(context);
             if (!string.IsNullOrEmpty(error))
             {
-                return (false, error, model);
+                return new ModelValidationResult()
+                {
+                    Success = false,
+                    Error = error,
+                };
             }
 
             List<ValidationResult> validationResults = new List<ValidationResult>();
 
             if (!RecursiveValidator.TryValidateObject(model, validationResults, true))
             {
-                return (false, string.Join(", ", validationResults.Select(x => string.Join(", ", x.MemberNames) + ": " + x.ErrorMessage)), model);
+                return new ModelValidationResult()
+                {
+                    Success = false,
+                    Error = string.Join(", ", validationResults.Select(x => string.Join(", ", x.MemberNames) + ": " + x.ErrorMessage)),
+                };
             }
 
             context.Items[ContextItems.Body] = model;
 
-            return (true, null, model);
+            return new ModelValidationResult()
+            {
+                Success = true,
+            };
         }
 
         private async Task<(T model, string error)> CreateModelAsync(HttpContext context)

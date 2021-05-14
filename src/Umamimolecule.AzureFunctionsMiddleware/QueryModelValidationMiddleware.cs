@@ -24,18 +24,25 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The validation results.</returns>
-        protected override async Task<(bool Success, string Error, T Model)> ValidateAsync(HttpContext context)
+        protected override async Task<ModelValidationResult> ValidateAsync(HttpContext context)
         {
             var model = await this.CreateModelAsync(context);
             List<ValidationResult> validationResults = new List<ValidationResult>();
             if (!Validator.TryValidateObject(model, new ValidationContext(model), validationResults, true))
             {
-                return (false, string.Join(", ", validationResults.Select(x => x.ErrorMessage)), model);
+                return new ModelValidationResult()
+                {
+                    Success = false,
+                    Error = string.Join(", ", validationResults.Select(x => x.ErrorMessage)),
+                };
             }
 
             context.Items[ContextItems.Query] = model;
 
-            return (true, null, model);
+            return new ModelValidationResult()
+            {
+                Success = true,
+            };
         }
 
         private Task<T> CreateModelAsync(HttpContext context)

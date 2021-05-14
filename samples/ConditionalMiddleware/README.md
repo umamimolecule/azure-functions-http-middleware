@@ -6,7 +6,7 @@ This example project shows how to conditionally use middleware using the `UseWhe
 
 This project contains two functions: `http://localhost:7071/api/Function1` and `http://localhost:7071/api/Function2`.
 
-Function1 will execute middleware A then B, whilst Function2 will only execute middlware B.
+Function1 will execute middleware A then B, whilst Function2 will only execute middleware B.
 
 The pipeline is set up using the following code, which inspects the inbound request to decide which middleware is invoked:
 

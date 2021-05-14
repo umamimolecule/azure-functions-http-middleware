@@ -43,6 +43,26 @@ From Microsoft's documentation:
 
 As an example, we could add middleware to a HTTP-triggered Azure Function to extract a correlation ID from the request headers, validate the query parameters and then validate body parameters for a request like this:
 
+`Startup.cs`
+```
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+
+[assembly: FunctionsStartup(typeof(MyFunctionApp.Startup))]
+
+namespace MyFunctionApp
+{
+    public class Startup : FunctionsStartup
+    {
+        public override void Configure(IFunctionsHostBuilder builder)
+        {
+            builder.Services.AddHttpContextAccessor();
+        }
+    }
+}
+```
+
+`MyFunctionApp.cs`
 ```
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +77,7 @@ namespace MyFunctionApp
     {
         private readonly IMiddlewarePipeline pipeline;
 
-        public MyFunction()
+        public MyFunction(IHttpContextAccessor httpContextAccessor)
         {
             // This pipeline will:
             // 1. Extract correlation ID from request header 'request-id' and put into HttpContext.TraceIdentifier,
@@ -67,7 +87,7 @@ namespace MyFunctionApp
             //
             // Any validation errors will result in a 400 Bad Request returned.
             
-            this.pipeline = new MiddlewarePipeline();
+            this.pipeline = new MiddlewarePipeline(httpContextAccessor);
             this.pipeline.UseCorrelationId(new string[] { "request-id" } )
                          .UseQueryValidation<QueryParameters>()
                          .UseBodyValidation<BodyPayload>()
@@ -78,10 +98,10 @@ namespace MyFunctionApp
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
         {
-            return await this.pipeline.RunAsync();
+            return this.pipeline.RunAsync();
         }
 
-        private async Task<IActionResult> ExecuteAsync(HttpContext context)
+        private Task<IActionResult> ExecuteAsync(HttpContext context)
         {
             // At this point, the query and body payloads have been validated, and
             // the correlation ID has been extracted from request headers.
@@ -115,7 +135,19 @@ namespace MyFunctionApp
 }
 ```
 
-<a name="motivation" />
+Calling the Azure Function without an `Id` query parameter would return the following error like this:
+
+```
+{
+    "correlationId": "c223f312-6800-47cc-a905-675353f46c4d",
+    "error": {
+        "code": "INVALID_QUERY_PARAMETERS",
+        "message": "The Id field is required."
+    }
+}
+```
+
+<a name="dependencies" />
 
 ## Dependencies
 - Azure Functions SDK 3.0.11
@@ -130,11 +162,72 @@ namespace MyFunctionApp
 install-package Umamimolecule.AzureFunctionsMiddleware
 ```
 
-2. Set up your pipeline in your Azure Function
+2. Set up your `Startup.cs` class
 
-_Note: Middleware pipelines are configured within each Azure Function's constructor.  This is unlike ASP.Net Core where the pipelines are defined within the Startup class, and this is due to the way the Azure functions runtime works where it does not expose any `IApplicationBuilder` type of bootstrapping._
+Register the HTTP context accessor service - this is needed by the pipeline to determine the current HTTP context.
+
+`Startup.cs`
 ```
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using Samples.ConditionalMiddleware.Pipelines;
+
+[assembly: FunctionsStartup(typeof(Example.Startup))]
+
+namespace Example
+{
+    public class Startup : FunctionsStartup
+    {
+        public override void Configure(IFunctionsHostBuilder builder)
+        {
+            builder.Services.AddHttpContextAccessor();
+        }
+    }
+}
+```
+
+3. Set up your pipeline in your Azure Function
+
+_Note: Middleware pipelines are configured within each Azure Function's constructor.  This is unlike ASP.Net Core where the pipelines are defined within the Startup class, and this is due to the way the Azure functions runtime works where it does not expose any_ `IApplicationBuilder` _type of bootstrapping._
+
+`MyFunction.cs`
+<pre><code>using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.AspNetCore.Http;
+using Umamimolecule.AzureFunctionsMiddleware;
+
+namespace Example
+{
+    public class MyFunction
+    {
+        private readonly IMiddlewarePipeline pipeline;
+
+<b>        public MyGetFunction(IHttpContextAccessor httpContextAccessor)
+        {
+            this.pipeline = new MiddlewarePipeline(httpContextAccessor);
+            this.pipeline.UseCorrelationId(new string[] { "x-request-id" })
+                         .Use(this.ExecuteAsync);            
+        }
+</b>
+        [FunctionName(nameof(MyFunction))]
+        public Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
+        {
+            return this.pipeline.RunAsync();
+        }
+
+        private async Task ExecuteAsync(HttpContext context)
+        {
+            var correlationId = context.TraceIdentifier;
+        
+            // Your function logic goes here...
+        }
+    }
+}</code></pre>
+
+3. In your HTTP trigger function, execute your pipeline:
+
+`MyFunction.cs`
+<pre><code>using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Umamimolecule.AzureFunctionsMiddleware;
 
@@ -144,32 +237,28 @@ namespace Example
     {
         private readonly IMiddlewarePipeline pipeline;
 
-        public MyGetFunction()
+        public MyGetFunction(IHttpContextAccessor httpContextAccessor)
         {
-            this.pipeline = new MiddlewarePipeline();
+            this.pipeline = new MiddlewarePipeline(httpContextAccessor);
             this.pipeline.UseCorrelationId(new string[] { "x-request-id" })
                          .Use(this.ExecuteAsync);            
         }
-    }
-}
-```
-
-3. In your HTTP trigger function, execute your pipeline:
-```
-    [FunctionName(nameof(MyGetFunction))]
-    public async Task<IActionResult> Run(
-    [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
-    {
-        return await this.pipeline.RunAsync();
-    }
-
-    private async Task<IActionResult> ExecuteAsync(HttpContext context)
-    {
-        var correlationId = context.TraceIdentifier;
+<b>
+        [FunctionName(nameof(MyGetFunction))]
+        public Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
+        {
+            return this.pipeline.RunAsync();
+        }
+</b>
+        private async Task<IActionResult> ExecuteAsync(HttpContext context)
+        {
+            var correlationId = context.TraceIdentifier;
         
-        // Your function logic goes here...
+            // Your function logic goes here...
+        }
     }
-```
+}</code></pre>
 
 <a name="samples" />
 
@@ -183,7 +272,10 @@ See the [Samples](https://github.com/umamimolecule/azure-functions-http-middlewa
 This package comes with the following built-in middleware:
 
 **BodyModelValidationMiddleware**  
-Validates the body model for the request.  If successful, the body will be available in `HttpContext.Items["Body"]`.
+Validates the body model for the request.  If successful, the body will be available in `HttpContext.Items["Body"]`.  Allows for a custom response to be returned if validation is unsuccessful.
+
+**QueryModelValidationMiddleware**  
+Validates the query model for the request.  If successful, the query object will be available in `HttpContext.Items["Query"]`.  Allows for a custom response to be returned if validation is unsuccessful.
 
 **CorrelationIdMiddleware**  
 Extracts a correlation ID from the request headers and sets the value to `HttpContext.TraceIdentifier`.  You can specify a collection of correlation ID header names and the first matching header will be used.  If no matching headers are found, a unique GUID will be used.
@@ -193,9 +285,6 @@ Allows exceptions to be handled and a custom response to be returned.
 
 **FunctionMiddleware**  
 Intended for your Azure Function implementation.
-
-**QueryModelValidationMiddleware**  
-Validates the query model for the request.  If successful, the query object will be available in `HttpContext.Items["Query"]`.
 
 **RequestDelegateMiddleware**  
 A general-purpose middleware for `RequestDelegate` instances.

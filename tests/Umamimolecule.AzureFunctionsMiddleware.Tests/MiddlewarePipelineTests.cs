@@ -40,6 +40,13 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             this.contextAccessor = new HttpContextAccessor(this.context);
         }
 
+        [Fact(DisplayName = "Creating new instance with null context accessor should throw expected exception")]
+        public void NullContextAccessorThrowsExpectedException()
+        {
+            var exception = ShouldThrowExtensions.ShouldThrow<ArgumentNullException>(() => new MiddlewarePipeline(null));
+            exception.ParamName.ShouldBe("httpContextAccessor");
+        }
+
         [Fact(DisplayName = "Use should add the first middleware successfully")]
         public void Use_FirstMiddleWare()
         {

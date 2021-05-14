@@ -17,9 +17,9 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <summary>
         /// Initializes a new instance of the <see cref="ConditionalMiddleware"/> class.
         /// </summary>
-        /// <param name="pipeline">The pipeline.</param>
-        /// <param name="condition">The condition to evaluate.</param>
-        /// <param name="configure">Configures the branch.</param>
+        /// <param name="pipeline">The pipeline. Required.</param>
+        /// <param name="condition">The condition to evaluate. Required.</param>
+        /// <param name="configure">Configures the branch. Optional.</param>
         /// <param name="rejoinPipeline">Determines if the branch should rejoin the main pipeline or not.</param>
         public ConditionalMiddleware(
             IMiddlewarePipeline pipeline,
@@ -27,6 +27,9 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             Action<IMiddlewarePipeline> configure,
             bool rejoinPipeline)
         {
+            GuardClauses.IsNotNull(nameof(pipeline), pipeline);
+            GuardClauses.IsNotNull(nameof(condition), condition);
+
             this.pipeline = pipeline;
             this.configure = configure;
             this.condition = condition;
@@ -44,7 +47,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             {
                 // Create new pipeline for branch
                 var branch = this.pipeline.New();
-                this.configure(branch);
+                this.configure?.Invoke(branch);
                 await branch.RunAsync();
 
                 if (!this.rejoinPipeline)

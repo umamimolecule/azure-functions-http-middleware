@@ -1,6 +1,8 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Umamimolecule.AzureFunctionsMiddleware
@@ -16,6 +18,26 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// Gets the error code to use when validation fails.
         /// </summary>
         public abstract string ErrorCode { get; }
+
+        /// <summary>
+        /// Gets or sets a function to handle a validation failure and provide a custom response. If not set, a default response object will be sent.
+        /// </summary>
+        public Func<HttpContext, ModelValidationResult, IActionResult> HandleValidationFailure { get; set; }
+
+        private Func<HttpContext, ModelValidationResult, IActionResult> DefaultFailureResponse => (HttpContext context, ModelValidationResult validationResult) =>
+        {
+            var response = new
+            {
+                correlationId = context.TraceIdentifier,
+                error = new
+                {
+                    code = this.ErrorCode,
+                    message = validationResult.Error,
+                },
+            };
+
+            return new BadRequestObjectResult(response);
+        };
 
         /// <summary>
         /// Runs the middleware.
@@ -36,19 +58,8 @@ namespace Umamimolecule.AzureFunctionsMiddleware
             }
             else
             {
-                var response = new
-                {
-                    correlationId = context.TraceIdentifier,
-                    error = new
-                    {
-                        code = this.ErrorCode,
-                        message = validationResult.Error,
-                    },
-                };
-
-                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Response.ContentType = ContentTypes.ApplicationJson;
-                await HttpResponseWritingExtensions.WriteAsync(context.Response, JsonConvert.SerializeObject(response));
+                var result = this.HandleValidationFailure ?? this.DefaultFailureResponse;
+                await context.ProcessActionResultAsync(result(context, validationResult));
             }
         }
 
@@ -57,6 +68,6 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// </summary>
         /// <param name="context">The HTTP context.</param>
         /// <returns>The validation results.</returns>
-        protected abstract Task<(bool Success, string Error, T Model)> ValidateAsync(HttpContext context);
+        protected abstract Task<ModelValidationResult> ValidateAsync(HttpContext context);
     }
 }

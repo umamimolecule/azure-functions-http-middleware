@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
@@ -62,10 +63,10 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             nextMiddleware.Verify(x => x.InvokeAsync(It.IsAny<HttpContext>()), Times.Once);
         }
 
-        [Theory(DisplayName = "InvokeAsync should throw the expected exception when a require property is missing")]
+        [Theory(DisplayName = "InvokeAsync should throw the expected exception when a required property is missing for the default response handler")]
         [InlineData(null)]
         [InlineData("")]
-        public async Task InvokeAsync_Fail_MissingRequiredProperties(string id)
+        public async Task InvokeAsync_Fail_MissingRequiredProperties_DefaultResponseHandler(string id)
         {
             var body = new Body()
             {
@@ -91,6 +92,48 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             response.Error.ShouldNotBeNull();
             response.Error.Code.ShouldBe("INVALID_BODY");
             response.Error.Message.ShouldContain("The Id field is required.");
+        }
+
+        [Theory(DisplayName = "InvokeAsync should throw the expected exception when a required property is missing for a custom response handler")]
+        [InlineData(null)]
+        [InlineData("")]
+        public async Task InvokeAsync_Fail_MissingRequiredProperties_CustomResponseHandler(string id)
+        {
+            var body = new Body()
+            {
+                Id = null,
+                Child = new Child()
+                {
+                    Id = id,
+                    Name = "Fred"
+                }
+            };
+
+            static IActionResult handler(HttpContext context, ModelValidationResult validationResult)
+            {
+                CustomErrorResponse response = new CustomErrorResponse()
+                {
+                    CustomErrorMessage = "Custom error: The Id field is required",
+                };
+
+                return new ObjectResult(response)
+                {
+                    StatusCode = 409,
+                };
+            }
+
+            var context = this.CreateContext(body);
+            var instance = this.CreateInstance<Body>();
+            instance.HandleValidationFailure = handler;
+
+            await instance.InvokeAsync(context);
+
+            context.Response.StatusCode.ShouldBe(409);
+            context.Response.Body.Position = 0;
+            var contents = context.Response.Body.ReadAsString();
+            var response = JsonConvert.DeserializeObject<CustomErrorResponse>(contents);
+            response.ShouldNotBeNull();
+            response.CustomErrorMessage.ShouldBe("Custom error: The Id field is required");
         }
 
         private BodyModelValidationMiddleware<T> CreateInstance<T>()
@@ -133,6 +176,11 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
             public string Id { get; set; }
 
             public string Name { get; set; }
+        }
+
+        class CustomErrorResponse
+        {
+            public string CustomErrorMessage { get; set; }
         }
     }
 }

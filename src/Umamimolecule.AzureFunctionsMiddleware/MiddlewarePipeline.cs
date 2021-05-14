@@ -20,6 +20,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <param name="httpContextAccessor">The HTTP context accessor.</param>
         public MiddlewarePipeline(IHttpContextAccessor httpContextAccessor)
         {
+            GuardClauses.IsNotNull(nameof(httpContextAccessor), httpContextAccessor);
             this.httpContextAccessor = httpContextAccessor;
         }
 

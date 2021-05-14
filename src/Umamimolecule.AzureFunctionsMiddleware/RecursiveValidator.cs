@@ -34,10 +34,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <exception cref="ArgumentNullException"><paramref name="instance"/> is null.</exception>
         private static bool TryValidateObject(object instance, ICollection<ValidationResult> results, bool validateAllProperties, string prefix)
         {
-            if (instance is null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
+            GuardClauses.IsNotNull(nameof(instance), instance);
 
             var tempResults = new List<ValidationResult>();
 

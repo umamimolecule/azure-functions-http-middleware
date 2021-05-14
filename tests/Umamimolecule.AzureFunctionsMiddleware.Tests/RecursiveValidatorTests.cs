@@ -205,7 +205,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware.Tests
                     return true;
                 }
 
-                return Uri.TryCreate(value.ToString(), UriKind.Absolute, out Uri result);
+                return Uri.TryCreate(value.ToString(), UriKind.Absolute, out Uri _);
             }
         }
 

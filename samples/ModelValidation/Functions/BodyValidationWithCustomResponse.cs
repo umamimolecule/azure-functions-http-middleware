@@ -4,48 +4,49 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Samples.ModelValidation.Pipelines;
+using Samples.ModelValidation.Responses;
 using Umamimolecule.AzureFunctionsMiddleware;
 
 namespace Samples.ModelValidation.Functions
 {
     /// <summary>
-    /// An HTTP-triggered Azure Function to demonstrate query parameter validation
-    /// using middleware.
+    /// An HTTP-triggered Azure Function to demonstrate body payload parameter
+    /// validation using middleware.
     /// </summary>
-    public class QueryValidation
+    public class BodyValidationWithCustomResponse
     {
         private readonly IMiddlewarePipeline pipeline;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QueryValidation"/> class.
+        /// Initializes a new instance of the <see cref="BodyValidation"/> class.
         /// </summary>
         /// <param name="pipelineFactory">The middleware pipeline factory.</param>
-        public QueryValidation(IMiddlewarePipelineFactory pipelineFactory)
+        public BodyValidationWithCustomResponse(IMiddlewarePipelineFactory pipelineFactory)
         {
             // Note: You could simply new-up a MiddlewarePipeline instance here and build it,
             // but this example uses a pipeline factory so you can share pipelines between
             // Azure Functions that have common requirements, without having to duplicate
             // code.
 
-            this.pipeline = pipelineFactory.CreateForQuery<QueryValidationQueryParameters>(this.ExecuteAsync);
+            this.pipeline = pipelineFactory.CreateForBody<BodyValidationBody>(
+                this.ExecuteAsync,
+                ResponseHelper.HandleValidationFailure);
         }
 
         /// <summary>
         /// The HTTP trigger entrypoint for the function.
         /// </summary>
         /// <param name="req">The HTTP request.</param>
-        /// <returns>The <see cref="IActionResult"/> result.</returns>
-        [FunctionName(nameof(QueryValidation))]
+        /// <returns></returns>
+        [FunctionName(nameof(BodyValidationWithCustomResponse))]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
         {
-            // Note that we don't need to use HttpRequest parameter here as the
-            // pipeline is using IHttpContextAccessor.
             return await this.pipeline.RunAsync();
         }
 
         /// <summary>
-        /// Executes the function's business logic.  At this point, the query model
+        /// Executes the function's business logic.  At this point, the body model
         /// has been validated correctly.
         /// </summary>
         /// <param name="context">The HTTP context for the request.</param>
@@ -58,7 +59,7 @@ namespace Samples.ModelValidation.Functions
             {
                 correlationId = context.TraceIdentifier,
                 message = "OK",
-                query = context.Items[ContextItems.Query]
+                body = context.Items[ContextItems.Body]
             };
 
             return new OkObjectResult(payload);

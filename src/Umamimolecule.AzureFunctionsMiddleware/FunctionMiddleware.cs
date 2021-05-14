@@ -18,6 +18,7 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <param name="func">The task to be executed.</param>
         public FunctionMiddleware(Func<HttpContext, Task<IActionResult>> func)
         {
+            GuardClauses.IsNotNull(nameof(func), func);
             this.func = func;
         }
 

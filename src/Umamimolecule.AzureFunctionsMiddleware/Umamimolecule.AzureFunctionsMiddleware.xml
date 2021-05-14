@@ -42,9 +42,9 @@
             <summary>
             Initializes a new instance of the <see cref="T:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware"/> class.
             </summary>
-            <param name="pipeline">The pipeline.</param>
-            <param name="condition">The condition to evaluate.</param>
-            <param name="configure">Configures the branch.</param>
+            <param name="pipeline">The pipeline. Required.</param>
+            <param name="condition">The condition to evaluate. Required.</param>
+            <param name="configure">Configures the branch. Optional.</param>
             <param name="rejoinPipeline">Determines if the branch should rejoin the main pipeline or not.</param>
         </member>
         <member name="M:Umamimolecule.AzureFunctionsMiddleware.ConditionalMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
@@ -172,6 +172,25 @@
             </summary>
             <param name="context">The context.</param>
             <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.GuardClauses">
+            <summary>
+            Contains methods to validate parameter values.
+            </summary>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.GuardClauses.IsNotNull(System.String,System.Object)">
+            <summary>
+            Validates a parameter value is not null.
+            </summary>
+            <param name="paramName">The parameter name.</param>
+            <param name="value">The parameter value.</param>
+        </member>
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.GuardClauses.IsNotNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Validates a parameter value is not null or whitespace.
+            </summary>
+            <param name="paramName">The parameter name.</param>
+            <param name="value">The parameter value.</param>
         </member>
         <member name="T:Umamimolecule.AzureFunctionsMiddleware.Headers">
             <summary>
@@ -367,20 +386,22 @@
             <param name="correlationIdHeaders">The colleciton of request headers that contain the correlation ID.  The first match is used.</param>
             <returns>The pipeline instance.</returns>
         </member>
-        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseQueryValidation``1(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline)">
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseQueryValidation``1(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{Microsoft.AspNetCore.Http.HttpContext,Umamimolecule.AzureFunctionsMiddleware.ModelValidationResult,Microsoft.AspNetCore.Mvc.IActionResult})">
             <summary>
             Adds query parameter validation middleware to the pipeline.
             </summary>
             <typeparam name="T">The query model type.</typeparam>
             <param name="pipeline">The pipeline.</param>
+            <param name="handleValidationFailure">Optional handler to return a custom response when validation is unsuccessful.</param>
             <returns>The pipeline instance.</returns>
         </member>
-        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseBodyValidation``1(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline)">
+        <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseBodyValidation``1(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{Microsoft.AspNetCore.Http.HttpContext,Umamimolecule.AzureFunctionsMiddleware.ModelValidationResult,Microsoft.AspNetCore.Mvc.IActionResult})">
             <summary>
             Adds body payload validation middleware to the pipeline.
             </summary>
             <typeparam name="T">The body model type.</typeparam>
             <param name="pipeline">The pipeline.</param>
+            <param name="handleValidationFailure">Optional handler to return a custom response when validation is unsuccessful.</param>
             <returns>The pipeline instance.</returns>
         </member>
         <member name="M:Umamimolecule.AzureFunctionsMiddleware.MiddlewarePipelineExtensions.UseExceptionHandling(Umamimolecule.AzureFunctionsMiddleware.IMiddlewarePipeline,System.Func{System.Exception,Microsoft.AspNetCore.Http.HttpContext,System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.IActionResult}},System.Func{System.Exception,System.Threading.Tasks.Task})">
@@ -409,6 +430,21 @@
             <param name="condition">The function which is invoked to determine if the branch should be taken.</param>
             <param name="configure">Configures the branch.</param>
             <returns>The pipeline instance.</returns>
+        </member>
+        <member name="T:Umamimolecule.AzureFunctionsMiddleware.ModelValidationResult">
+            <summary>
+            Represents the validation result for a model.
+            </summary>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.ModelValidationResult.Success">
+            <summary>
+            Gets or sets a value indicating whether the validation was successful.
+            </summary>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.ModelValidationResult.Error">
+            <summary>
+            Gets or sets the error message when the validation was unsuccessful.
+            </summary>
         </member>
         <member name="T:Umamimolecule.AzureFunctionsMiddleware.QueryModelValidationMiddleware`1">
             <summary>
@@ -481,6 +517,11 @@
         <member name="P:Umamimolecule.AzureFunctionsMiddleware.ValidationMiddleware`1.ErrorCode">
             <summary>
             Gets the error code to use when validation fails.
+            </summary>
+        </member>
+        <member name="P:Umamimolecule.AzureFunctionsMiddleware.ValidationMiddleware`1.HandleValidationFailure">
+            <summary>
+            Gets or sets a function to handle a validation failure and provide a custom response. If not set, a default response object will be sent.
             </summary>
         </member>
         <member name="M:Umamimolecule.AzureFunctionsMiddleware.ValidationMiddleware`1.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">

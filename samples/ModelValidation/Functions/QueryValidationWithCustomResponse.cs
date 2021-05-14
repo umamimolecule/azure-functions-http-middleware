@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Samples.ModelValidation.Pipelines;
+using Samples.ModelValidation.Responses;
 using Umamimolecule.AzureFunctionsMiddleware;
 
 namespace Samples.ModelValidation.Functions
@@ -12,7 +13,7 @@ namespace Samples.ModelValidation.Functions
     /// An HTTP-triggered Azure Function to demonstrate query parameter validation
     /// using middleware.
     /// </summary>
-    public class QueryValidation
+    public class QueryValidationWithCustomResponse
     {
         private readonly IMiddlewarePipeline pipeline;
 
@@ -20,14 +21,16 @@ namespace Samples.ModelValidation.Functions
         /// Initializes a new instance of the <see cref="QueryValidation"/> class.
         /// </summary>
         /// <param name="pipelineFactory">The middleware pipeline factory.</param>
-        public QueryValidation(IMiddlewarePipelineFactory pipelineFactory)
+        public QueryValidationWithCustomResponse(IMiddlewarePipelineFactory pipelineFactory)
         {
             // Note: You could simply new-up a MiddlewarePipeline instance here and build it,
             // but this example uses a pipeline factory so you can share pipelines between
             // Azure Functions that have common requirements, without having to duplicate
             // code.
 
-            this.pipeline = pipelineFactory.CreateForQuery<QueryValidationQueryParameters>(this.ExecuteAsync);
+            this.pipeline = pipelineFactory.CreateForQuery<QueryValidationQueryParameters>(
+                this.ExecuteAsync,
+                ResponseHelper.HandleValidationFailure);
         }
 
         /// <summary>
@@ -35,7 +38,7 @@ namespace Samples.ModelValidation.Functions
         /// </summary>
         /// <param name="req">The HTTP request.</param>
         /// <returns>The <see cref="IActionResult"/> result.</returns>
-        [FunctionName(nameof(QueryValidation))]
+        [FunctionName(nameof(QueryValidationWithCustomResponse))]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {

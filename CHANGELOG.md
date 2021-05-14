@@ -1,6 +1,11 @@
 # Changelog
 
-<a name="2.0.0" />
+<a name="2.1.0" />
+
+## [2.1.0] - 2021-05-14
+
+### Added
+ - Custom response handlers for body and query parameter validation failures
 
 ## [2.0.0] - 2020-12-12
 
