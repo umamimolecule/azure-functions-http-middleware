@@ -209,13 +209,13 @@ namespace Example
         }
 </b>
         [FunctionName(nameof(MyFunction))]
-        public Task<IActionResult> Run(
+        public Task&lt;IActionResult&gt; Run(
             [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
             return this.pipeline.RunAsync();
         }
 
-        private async Task ExecuteAsync(HttpContext context)
+        private async Task&lt;IActionResult&gt; ExecuteAsync(HttpContext context)
         {
             var correlationId = context.TraceIdentifier;
         
@@ -245,19 +245,55 @@ namespace Example
         }
 <b>
         [FunctionName(nameof(MyGetFunction))]
-        public Task<IActionResult> Run(
+        public Task&lt;IActionResult&gt; Run(
             [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
         {
             return this.pipeline.RunAsync();
         }
 </b>
-        private async Task<IActionResult> ExecuteAsync(HttpContext context)
+        private async Task&lt;IActionResult&gt; ExecuteAsync(HttpContext context)
         {
             var correlationId = context.TraceIdentifier;
         
             // Your function logic goes here...
         }
     }
+}</code></pre>
+
+5. Then implement the logic for your Azure Function:
+
+**MyFunction.cs**
+<pre><code>using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.AspNetCore.Http;
+using Umamimolecule.AzureFunctionsMiddleware;
+
+namespace Example
+{
+    public class MyGetFunction
+    {
+        private readonly IMiddlewarePipeline pipeline;
+
+        public MyGetFunction(IHttpContextAccessor httpContextAccessor)
+        {
+            this.pipeline = new MiddlewarePipeline(httpContextAccessor);
+            this.pipeline.UseCorrelationId(new string[] { "x-request-id" })
+                         .Use(this.ExecuteAsync);            
+        }
+
+        [FunctionName(nameof(MyGetFunction))]
+        public Task&lt;IActionResult&gt; Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequest req)
+        {
+            return this.pipeline.RunAsync();
+        }
+<b>
+        private async Task&lt;IActionResult&gt; ExecuteAsync(HttpContext context)
+        {
+            var correlationId = context.TraceIdentifier;
+        
+            // Your function logic goes here...
+        }
+</b>    }
 }</code></pre>
 
 <a name="samples" />
