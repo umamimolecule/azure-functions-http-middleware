@@ -9,15 +9,15 @@ namespace Samples.ModelValidation.Pipelines
 {
     class CustomExceptionHandler
     {
-        public static async Task<IActionResult> HandleAsync(Exception exception, HttpContext context)
+        public static Task<IActionResult> HandleAsync(Exception exception, HttpContext context)
         {
-            await Task.CompletedTask;
-
+            IActionResult result;
             switch (exception)
             {
                 case ThrottledException t:
                     context.Response.Headers["Retry-After"] = ((int)t.TryAgain.TotalSeconds).ToString();
-                    return new StatusCodeResult(429);
+                    result = new StatusCodeResult(429);
+                    break;
 
                 default:
                     var body = new
@@ -30,11 +30,14 @@ namespace Samples.ModelValidation.Pipelines
                         }
                     };
 
-                    return new ObjectResult(body)
+                    result = new ObjectResult(body)
                     {
                         StatusCode = (int)HttpStatusCode.InternalServerError
                     };
+                    break;
             }
+
+            return Task.FromResult<IActionResult>(result);
         }
     }
 }

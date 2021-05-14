@@ -51,10 +51,8 @@ namespace Samples.ModelValidation.Functions
         /// </summary>
         /// <param name="context">The HTTP context for the request.</param>
         /// <returns>The <see cref="IActionResult"/> result.</returns>
-        private async Task<IActionResult> ExecuteAsync(HttpContext context)
+        private Task<IActionResult> ExecuteAsync(HttpContext context)
         {
-            await Task.CompletedTask;
-
             var payload = new
             {
                 correlationId = context.TraceIdentifier,
@@ -62,7 +60,7 @@ namespace Samples.ModelValidation.Functions
                 body = context.Items[ContextItems.Body]
             };
 
-            return new OkObjectResult(payload);
+            return Task.FromResult<IActionResult>(new OkObjectResult(payload));
         }
     }
 }

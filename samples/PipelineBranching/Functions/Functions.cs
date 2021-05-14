@@ -54,17 +54,15 @@ namespace Samples.PipelineBranching.Functions
         /// </summary>
         /// <param name="context">The HTTP context for the request.</param>
         /// <returns>The <see cref="IActionResult"/> result.</returns>
-        private async Task<IActionResult> ExecuteFunction1Async(HttpContext context)
+        private Task<IActionResult> ExecuteFunction1Async(HttpContext context)
         {
-            await Task.CompletedTask;
-
             var payload = new
             {
                 message = "OK",
                 functionName = "Function1"
             };
 
-            return new OkObjectResult(payload);
+            return Task.FromResult<IActionResult>(new OkObjectResult(payload));
         }
 
         /// <summary>
@@ -72,17 +70,15 @@ namespace Samples.PipelineBranching.Functions
         /// </summary>
         /// <param name="context">The HTTP context for the request.</param>
         /// <returns>The <see cref="IActionResult"/> result.</returns>
-        private async Task<IActionResult> ExecuteFunction2Async(HttpContext context)
+        private Task<IActionResult> ExecuteFunction2Async(HttpContext context)
         {
-            await Task.CompletedTask;
-
             var payload = new
             {
                 message = "OK",
                 functionName = "Function2"
             };
 
-            return new OkObjectResult(payload);
+            return Task.FromResult<IActionResult>(new OkObjectResult(payload));
         }
     }
 }

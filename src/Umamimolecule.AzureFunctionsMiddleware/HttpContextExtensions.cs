@@ -15,9 +15,9 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// <param name="context">The HTTP context.</param>
         /// <param name="result">The aciton result to process.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public static async Task ProcessActionResultAsync(this HttpContext context, IActionResult result)
+        public static Task ProcessActionResultAsync(this HttpContext context, IActionResult result)
         {
-            await result.ExecuteResultAsync(new ActionContext(context, new Microsoft.AspNetCore.Routing.RouteData(), new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor()));
+            return result.ExecuteResultAsync(new ActionContext(context, new Microsoft.AspNetCore.Routing.RouteData(), new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor()));
         }
     }
 }

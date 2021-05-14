@@ -106,8 +106,6 @@ namespace MyFunctionApp
             // At this point, the query and body payloads have been validated, and
             // the correlation ID has been extracted from request headers.
             
-            await Task.CompletedTask;
-
             var payload = new
             {
                 correlationId = context.TraceIdentifier,
@@ -115,7 +113,7 @@ namespace MyFunctionApp
                 query = context.Items[ContextItems.Query]
             };
 
-            return new OkObjectResult(payload);
+            return Task.FromResult<IActionResult>(new OkObjectResult(payload));
         }
     }
 

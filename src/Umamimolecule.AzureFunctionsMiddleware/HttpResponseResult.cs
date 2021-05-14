@@ -34,10 +34,10 @@ namespace Umamimolecule.AzureFunctionsMiddleware
         /// information.
         /// </param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task ExecuteResultAsync(ActionContext context)
+        public Task ExecuteResultAsync(ActionContext context)
         {
-            await Task.CompletedTask;
             context.HttpContext = this.context;
+            return Task.CompletedTask;
         }
     }
 }
