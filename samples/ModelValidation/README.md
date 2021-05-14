@@ -143,7 +143,7 @@ and observe it returns 400 Bad Request with a description of the error:
 
 <a name="defaultqueryvalidationresponse" />
 
-##
+### Default validation failure response
 
 Submit a GET request to `http://localhost:7071/api/QueryValidation?name=Fred`:
 
