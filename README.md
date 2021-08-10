@@ -95,7 +95,7 @@ namespace MyFunctionApp
         }
 
         [FunctionName(nameof(MyFunction))]
-        public async Task<IActionResult> Run(
+        public Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
         {
             return this.pipeline.RunAsync();
