@@ -1,4 +1,10 @@
-<svg fill="none" viewBox="0 0 800 100" width="800" height="100" xmlns="http://www.w3.org/2000/svg">
+<svg
+  fill="none"
+  viewBox="0 0 800 150"
+  width="800"
+  height="150"
+  xmlns="http://www.w3.org/2000/svg"
+>
 	<foreignObject width="100%" height="100%">
 		<div xmlns="http://www.w3.org/1999/xhtml">
 			<style>
@@ -27,10 +33,12 @@
 
 				p {
 					font-style: italic;
+					font-size: 12px;
 				}
 			</style>
 			<div class="container">
-				<p>Note: Azure Functions using the isolated process model with .Net 5 and above already have built-in support for middleware. This project is intended to provide middleware functionality to .Net Core 3.1 and below.</p>
+				<p
+        >Note: Azure Functions using the isolated process model with .Net 5 and above already have built-in support for middleware. This project is intended to provide middleware functionality to Azure Functions written in .Net Core 3.1 and below.</p>
 			</div>
 		</div>
 	</foreignObject>
