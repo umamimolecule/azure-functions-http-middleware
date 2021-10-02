@@ -8,6 +8,10 @@ An extensible middleware implementation for HTTP-triggered Azure Functions in .N
 <img src="https://raw.githubusercontent.com/umamimolecule/azure-functions-http-middleware/master/assets/logo.png">
 </p>
 
+> *Note: Azure Functions using the isolated process model with .Net 5 and above already have built-in support for middleware. This project is intended to provide middleware functionality to .Net Core 3.1 and below.*
+
+<img src="https://raw.githubusercontent.com/umamimolecule/azure-functions-http-middleware/master/assets/obsolete.svg">
+
 Save yourself having to write the same cross-cutting concerns over and over for model validation, error handling, correlation IDs and such. This project was inspired by [this blog post](https://dasith.me/2018/01/20/using-azure-functions-httptrigger-as-web-api/) by Dasith Wijesiriwardena.
 
 ### Table of contents
