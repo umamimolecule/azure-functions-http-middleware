@@ -1,3 +1,7 @@
+<p align="center">
+<img src="https://raw.githubusercontent.com/umamimolecule/azure-functions-http-middleware/master/assets/obsolete.svg">
+</p>
+
 # azure-functions-http-middleware
 
 ![Azure DevOps builds (branch)](https://img.shields.io/azure-devops/build/umamimolecule/azure-functions-http-middleware/14/master) ![Azure DevOps coverage (branch)](https://img.shields.io/azure-devops/coverage/umamimolecule/azure-functions-http-middleware/14/master) ![Nuget](https://img.shields.io/nuget/v/Umamimolecule.AzureFunctionsMiddleware) [![](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
@@ -7,8 +11,6 @@ An extensible middleware implementation for HTTP-triggered Azure Functions in .N
 <p align="center">
 <img src="https://raw.githubusercontent.com/umamimolecule/azure-functions-http-middleware/master/assets/logo.png">
 </p>
-
-<img src="https://raw.githubusercontent.com/umamimolecule/azure-functions-http-middleware/master/assets/obsolete.svg">
 
 Save yourself having to write the same cross-cutting concerns over and over for model validation, error handling, correlation IDs and such. This project was inspired by [this blog post](https://dasith.me/2018/01/20/using-azure-functions-httptrigger-as-web-api/) by Dasith Wijesiriwardena.
 
