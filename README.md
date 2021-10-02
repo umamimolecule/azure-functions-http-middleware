@@ -37,7 +37,9 @@ https://www.nuget.org/packages/Umamimolecule.AzureFunctionsMiddleware/
 
 ## Introduction
 
-At the moment, there isn't a built-in mechanism of defining middleware for Net Azure Functions.  So this project aims to provide a similar middleware functionality that you would find in ASP .Net Core.
+At the moment, there isn't a built-in mechanism of defining middleware for Net Azure Functions written in .Net Core.  So this project aims to provide a similar middleware functionality that you would find in ASP .Net Core.
+
+_**Update: Azure Functions written in .Net 5 and above using isolated process have [native support for middleware](https://docs.microsoft.com/en-us/azure/azure-functions/dotnet-isolated-process-guide#middleware).  So if your project uses .Net 5 and above you probably want to use the native implementation instead of this project.**_
 
 From Microsoft's documentation:
 
